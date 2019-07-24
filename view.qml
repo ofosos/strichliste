@@ -3,12 +3,38 @@ import QtQuick.Controls 2.4
 
 StackView {
     id: stack
-    initialItem: page1
+    initialItem: opener
     width: 800
     height: 600
     anchors.fill: parent
 
     Component {
+    	      id: opener
+	      Item {
+	      
+Column {
+    id: openerCol
+
+    Button {
+        text: qsTr("Drinks")
+	onClicked: {
+		   stack.push(page1)
+	}
+    }
+
+    Button {
+        text: qsTr("Materialspende")
+    }
+
+    Button {
+        text: qsTr("Status")
+    }
+
+}}
+
+    }
+    Component {
+
     id: page1
     Item{
     GridView {
@@ -60,6 +86,15 @@ StackView {
 	     	      stack.push(page2)
 	     }
          }
+    Button {
+             id: btnBackToOpener
+	     anchors.left: btnSwitchToCart.right
+             anchors.bottom: parent.bottom
+             text: "Back"
+	     onClicked: {
+	     	      stack.push(opener)
+	     }
+         }
 }}
 
 Component {
@@ -103,12 +138,13 @@ Component {
     Button {
              id: btnBack
              anchors.bottom: parent.bottom
-             text: "Back to selection"
+             text: "Back"
 	     onClicked: { stack.push(page1) }
          }
     Button {
              id: btnCheckOut2
              anchors.bottom: parent.bottom
+	     anchors.left: btnBack.right
              text: "Check out " + cart.total + " Eur"
 	     onClicked: {
 	     		stack.push(rfidpage)

@@ -45,7 +45,6 @@ class DrinkList(QAbstractListModel):
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
         row = index.row()
-        print('Call get for {row}')
         if 0 <= row < len(self.items):
             if role == QtCore.Qt.DisplayRole:
                 return self.items[row].name
