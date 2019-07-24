@@ -8,7 +8,6 @@ from PySide2.QtCore import QStringListModel, Qt, QUrl, QObject, Slot,\
     QAbstractListModel, Property, Signal, QRunnable, QThreadPool
 from PySide2.QtGui import QGuiApplication
 from PySide2 import QtCore
-import time
 from datetime import datetime
 
 
@@ -114,7 +113,6 @@ class RFIDThread(QRunnable):
             self._cart.rfidDone(uid)
 
 
-
 class LogEntry:
     def __init__(self, uid, name, price, quantity, dt):
         self.uid = uid
@@ -123,10 +121,11 @@ class LogEntry:
         self.quantity = quantity
         self.dt = dt
 
+
 class Logbook:
 
     entries = []
-    
+
     def writeToDisk(self, entry):
         with open("log.txt", "a") as f:
             f.write(f"{entry.uid};{entry.name};{entry.price};{entry.quantity};{entry.dt.isoformat()}\n")
@@ -140,6 +139,7 @@ class Logbook:
     def getSum(uid):
         return 0.0
 
+
 class Cart(QAbstractListModel):
     threadpool = QThreadPool()
     log = Logbook()
@@ -152,7 +152,7 @@ class Cart(QAbstractListModel):
     SumRole = QtCore.Qt.UserRole + 1003
 
     _success = False
-    
+
     def __init__(self):
         super(Cart, self).__init__()
 
@@ -244,7 +244,7 @@ class Cart(QAbstractListModel):
     @Property(bool)
     def success(self):
         return self._success
-    
+
     @Property(str, notify=totalChanged)
     def total(self):
         tot = 0.0
