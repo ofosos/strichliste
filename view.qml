@@ -11,7 +11,16 @@ StackView {
     Component {
     	      id: opener
 	      Item {
-	      
+
+Button {
+       text: qsTr("Cart")
+       anchors.right: parent.right
+       anchors.bottom: parent.bottom
+       onClicked: {
+       		  stack.push(page2)
+       }
+}
+
 Column {
     id: openerCol
 
@@ -19,6 +28,13 @@ Column {
         text: qsTr("Drinks")
 	onClicked: {
 		   stack.push(page1)
+	}
+    }
+
+    Button {
+        text: qsTr("Pauschale")
+	onClicked: {
+		cart.addStuff("Pauschale Mitglied", 1, 3.0)
 	}
     }
 
@@ -92,7 +108,7 @@ Column {
              anchors.bottom: parent.bottom
              text: "Back"
 	     onClicked: {
-	     	      stack.push(opener)
+	     	      stack.pop()
 	     }
          }
 }}
@@ -139,7 +155,7 @@ Component {
              id: btnBack
              anchors.bottom: parent.bottom
              text: "Back"
-	     onClicked: { stack.push(page1) }
+	     onClicked: { stack.pop() }
          }
     Button {
              id: btnCheckOut2
@@ -173,7 +189,7 @@ Component {
 		              onCleared: {
 			      		failureText.visible = !cart.success
 			      		successText.visible = cart.success
-			      		   delay(5000, function(){stack.push(page1)})
+			      		   delay(5000, function(){ stack.pop({item: opener}); })
 				}
 		    }
 	       Text {
