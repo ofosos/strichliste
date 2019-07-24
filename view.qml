@@ -189,7 +189,7 @@ Component {
 		              onCleared: {
 			      		failureText.visible = !cart.success
 			      		successText.visible = cart.success
-			      		   delay(5000, function(){ stack.pop({item: opener}); })
+			      		   delay(5000, function(){ stack.pop({item: opener}) })
 				}
 		    }
 	       Text {

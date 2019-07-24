@@ -156,6 +156,8 @@ class Cart(QAbstractListModel):
     def __init__(self):
         super(Cart, self).__init__()
 
+        self.requestEndResetModel.connect(self.callEndResetModel)
+
     def rowCount(self, parent=None):
         return len(self.items)
 
@@ -200,12 +202,20 @@ class Cart(QAbstractListModel):
     cleared = Signal()
     success = False
 
+    requestEndResetModel = Signal()
+
+    @Slot()
+    def callEndResetModel(self):
+        self.endResetModel()
+
     def clear(self):
         self.items = []
+        self.requestEndResetModel.emit()
         self.cleared.emit()
 
     @Slot()
     def startTransaction(self):
+        self.beginResetModel()
         worker = RFIDThread(self)
         self.threadpool.start(worker)
 
