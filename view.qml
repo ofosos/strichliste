@@ -142,38 +142,70 @@ Rectangle {
         Component {
             id: page2
             Item {
-                GridView {
-                    anchors.fill: parent
+                Rectangle {
+                    width: 600
+                    color: "lightsteelblue"
+                    anchors {
+                        top: parent.top
+                        bottom: parent.bottom
+                    }
 
-                    cellWidth: 100; cellHeight: 50
-                    focus: true
-                    model: cart
+                    GridView {
+                        anchors.fill: parent
 
-                    highlight: Rectangle { width: 80; height: 40; color: "lightsteelblue" }
+                        cellWidth: 600; cellHeight: 50
+                        focus: true
+                        model: cart
 
-                    delegate: Item {
-                        width: 100; height: 50
-
-                        Text {
-                            id: textQuant
-                            text: quantity
+                        highlight: Rectangle {
+                            width: 600;
+                            height: 40;
+                            color: "white"
+                            anchors {
+                                left: parent.left
+                                leftMargin: 5
+                            }
                         }
-                        Text {
-                            anchors { left: textQuant.right }
-                            id: textName
-                            text: name
-                        }
 
-                        Text {
-                            anchors { left: textName.right }
-                            text: price
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                parent.GridView.view.currentIndex = index
+                        delegate: Rectangle {
+                            width: 590; height: 50
+                            color: "transparent"
+
+                            Text {
+                                id: textQuant
+                                text: quantity
+                                width: 50
+                                anchors {
+                                    left: parent.left
+                                    leftMargin: 10
+                                    verticalCenter: parent.verticalCenter
+                                }
+                            }
+                            Text {
+                                anchors {
+                                    left: textQuant.right
+                                    leftMargin: 10
+                                    verticalCenter: parent.verticalCenter
+                                }
+                                id: textName
+                                text: name
                             }
 
+                            Text {
+                                anchors {
+                                    right: parent.right
+                                    rightMargin: 20
+                                    verticalCenter: parent.verticalCenter
+                                }
+                                text: price + "€"
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    parent.GridView.view.currentIndex = index
+                                }
+
+                            }
                         }
                     }
                 }
