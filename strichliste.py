@@ -86,12 +86,12 @@ class CartItem(QObject):
         self._price = float(val)
 
     def getPrice(self):
-        return str(self._price)
+        return "{0:.2f}".format(self._price)
 
     price = Property(str, getPrice, setPrice)
 
     def getSum(self):
-        return str(self._price * self._quantity)
+        return "{0:.2f}".format(self._price * self._quantity)
 
     sum = Property(str, getSum)
 
@@ -258,7 +258,7 @@ class Cart(QAbstractListModel):
             su = item._price * item._quantity
             tot += su
 
-        return str(tot)
+        return "{0:.2f}".format(tot)
 
 
 if __name__ == '__main__':
