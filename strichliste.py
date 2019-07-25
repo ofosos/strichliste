@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- conding: utf-8 -*-
 
-import os, sys, json
-import PySide2.QtQml
-from PySide2.QtQuick import QQuickView
-from PySide2.QtCore import QStringListModel, Qt, QUrl, QObject, Slot,\
+from datetime import datetime
+import json
+import os
+import sys
+
+from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
     QAbstractListModel, Property, Signal, QRunnable, QThreadPool
 from PySide2.QtGui import QGuiApplication
+from PySide2.QtQuick import QQuickView
 from PySide2 import QtCore
-from datetime import datetime
 
 
 class Drink(QObject):
