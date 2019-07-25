@@ -103,7 +103,7 @@ Rectangle {
                             color: "lightsteelblue"
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
-                        Item {
+                        Button {
                             anchors.fill: parent
                             
                             Text {
@@ -119,14 +119,11 @@ Rectangle {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: price + "€"
                             }
-                        }
-                        MouseArea {
-                            anchors.fill: parent
                             onClicked: {
                                 // parent.GridView.view.currentIndex = index
                                 cart.addStuff(name, 1, price)
                             }
-
+                            
                         }
                     }
                 }
