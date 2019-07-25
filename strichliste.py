@@ -128,7 +128,7 @@ class UidService(QObject):
         with open("uidmap.json", "r") as f:
             jtxt = f.read()
             m = json.loads(jtxt)
-            self.uidmap = {int(key): val for key, val in m.items()}
+            self.uidmap = m
 
     def checkpoint(self):
         shutil.move("uidmap.json", "uidmap.old.json")
@@ -138,20 +138,23 @@ class UidService(QObject):
 
     @Slot(int, result=bool)
     def isValid(self, uid):
-        return self.uidmap.get(uid, None) is not None
+        return self.uidmap.get(str(uid), None) is not None
 
     @Slot(int, result=bool)
     def isAdmin(self, uid):
-        return self.uidmap.get(uid, {}).get("admin", None) is True
+        return (self.uidmap.get(str(uid)) is not None and
+                self.uidmap[str(uid)]["admin"] is True)
 
     @Slot(int, str)
     def addMapping(self, uid, name):
-        self.uidmap[uid] = {"name": name, "admin": False}
-        self.checkpoint()
+        if self.uidmap.get(str(uid), None) is None:
+            self.uidmap[str(uid)] = {"name": name, "admin": False}
+            self.checkpoint()
 
-    @Slot(int, str)
+    @Slot(int)
     def addAdmin(self, uid):
-        self.uidmap[uid]["admin"] = True
+        self.uidmap[str(uid)]["admin"] = True
+        self.checkpoint()
 
 
 class LogEntry:

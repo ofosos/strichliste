@@ -411,13 +411,18 @@ Rectangle {
 
         Item {
             Component.onCompleted: {
-                cart.uidentered.connect(goUid)
+                cart.uidentered.connect(checkAccount)
                 cart.fetchUid()
             }
 
-            function goUid () {
-                stack.pop()
-                stack.push(accountDisplay.createObject(stack))
+            function checkAccount () {
+                if (cart.success) {
+                    stack.pop()
+                    stack.push(accountDisplay.createObject(stack))
+                } else {
+                    stack.pop()
+                }
+                cart.uidentered.disconnect(checkAccount)
             }
             Rectangle {
                 width: 400
@@ -530,6 +535,7 @@ Rectangle {
                         stack.pop()
                     })
                 }
+                cart.uidentered.disconnect(goUid)
             }
             Rectangle {
                 width: 400
@@ -595,11 +601,11 @@ Rectangle {
                 timeradduid.start();
             }
             Component.onCompleted: {
-                cart.uidentered.connect(goUid)
+                cart.uidentered.connect(checkAdmin)
                 cart.fetchUid()
             }
 
-            function goUid () {
+            function checkAdmin () {
                 if (cart.success) {
                     uidmap.addMapping(cart.uid, enterNameInput.text)
                     adduidSuccess.visible = true
@@ -614,6 +620,7 @@ Rectangle {
                     })
 
                 }
+                cart.uidentered.disconnect(checkAdmin)
             }
             Rectangle {
                 width: 400
@@ -695,14 +702,37 @@ Rectangle {
         id: adminuid
 
         Item {
+            Timer {
+                id: timeradminuid
+            }
+
+            function delay(delayTime, cb) {
+                timeradminuid.interval = delayTime;
+                timeradminuid.repeat = false;
+                timeradminuid.triggered.connect(cb);
+                timeradminuid.start();
+            }
             Component.onCompleted: {
-                cart.uidentered.connect(goUid)
+                cart.uidentered.connect(processAdmin)
                 cart.fetchUid()
             }
 
-            function goUid () {
-                
-                stack.pop()
+            function processAdmin () {
+                if (cart.success && uidmap.isAdmin(cart.uid)) {
+                    adminuidSuccess.visible = true
+                    delay(1500, function () {
+                        stack.pop()
+                        stack.push(adminuid2.createObject(stack))
+                    })
+                } else {
+                    adminuidFailure.visible = true
+                    delay(2000, function () {
+                        adminuidFailure.visible = false
+                        stack.pop()
+                    })
+
+                }
+                cart.uidentered.disconnect(processAdmin)
             }
             Rectangle {
                 width: 400
@@ -710,7 +740,7 @@ Rectangle {
                 color: "transparent"
                 Text {
                     id: insertTag4
-                    text: "Please insert ADMIN tag"
+                    text: "Please insert existing ADMIN tag"
                     color: "lightsteelblue"
                     anchors {
                         top: parent.top
@@ -724,6 +754,124 @@ Rectangle {
 
                     anchors {
                         top: insertTag4.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: adminuidSuccess
+                    text: "Success!"
+                    color: "lightsteelblue"
+                    visible: false
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: adminuidFailure
+                    text: "Success!"
+                    color: "lightsteelblue"
+                    visible: false
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+            }
+            Button {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                text: qsTr("Back")
+                onClicked: {
+                    stack.pop()
+                }
+            }
+        }
+    }
+    Component {
+        id: adminuid2
+
+        Item {
+            property bool running: false
+            Timer {
+                id: timeradminuid2
+            }
+
+            function delay(delayTime, cb) {
+                timeradminuid2.interval = delayTime;
+                timeradminuid2.repeat = false;
+                timeradminuid2.triggered.connect(cb);
+                timeradminuid2.start();
+            }
+            Component.onCompleted: {
+                cart.uidentered.connect(enterNewAdmin)
+                cart.fetchUid()
+
+                running = true
+            }
+
+            function enterNewAdmin () {
+                if (cart.success) {
+                    uidmap.addAdmin(cart.uid)
+                    adminuid2Success.visible = true
+                    delay(1500, function () {
+                        stack.pop()
+                    })
+                } else {
+                    adduidFailure.visible = true
+                    delay(1500, function () {
+                        adminuid2Failure.visible = false
+                        stack.pop()
+                    })
+
+                }
+                cart.uidentered.disconnect(enterNewAdmin)
+            }
+            Rectangle {
+                width: 400
+                height: 400
+                color: "transparent"
+                Text {
+                    id: insertTag5
+                    text: "Please insert new ADMIN tag"
+                    color: "lightsteelblue"
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: adminuid2Success
+                    text: "Success!"
+                    color: "lightsteelblue"
+                    visible: false
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: adminuid2Failure
+                    text: "Success!"
+                    color: "lightsteelblue"
+                    visible: false
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+
+                Image {
+                    width: 300; height: 300
+                    fillMode: Image.PreserveAspectFit
+                    source: "images/rfid.png"
+
+                    anchors {
+                        top: insertTag5.bottom
                         horizontalCenter: parent.horizontalCenter
                     }
                 }
