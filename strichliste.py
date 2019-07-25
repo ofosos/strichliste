@@ -251,7 +251,9 @@ class Cart(QAbstractListModel):
 
     def logCart(self, uid):
         for item in self.items:
-            self.log.logEntry(uid, item.name, item.price, item.quantity)
+            self.log.logEntry(uid, item.name,
+                              locale.atof(item.price),
+                              item.quantity)
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
         row = index.row()
