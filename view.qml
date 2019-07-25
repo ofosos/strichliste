@@ -880,14 +880,6 @@ Rectangle {
                     verticalCenter: parent.verticalCenter
                 }
             }
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
-                }
-            }
         }
     }
 
