@@ -345,7 +345,7 @@ class Cart(QAbstractListModel):
             ci.quantity = 2
         self.totalChanged.emit()
         print("Cart total: {}".format(self.total))
-
+        
     totalChanged = Signal()
 
     @Property(int, notify=uidentered)
