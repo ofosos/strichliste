@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.4
+import QtQuick.VirtualKeyboard 2.1
 
 Rectangle {
     id: window
@@ -53,7 +54,7 @@ Rectangle {
                     }
 
                     Button {
-                        text: qsTr("Pauschale")
+                        text: qsTr("Workshop fee")
                         onClicked: {
                             cart.addStuff("Pauschale Mitglied", 1, 3.0)
                         }
@@ -64,15 +65,18 @@ Rectangle {
                     }
 
                     Button {
-                        text: qsTr("Materialspende")
+                        text: qsTr("Donate for material")
                         anchors {
                             left: parent.left
                             right: parent.right
                         }
+                        onClicked: {
+                            stack.push(donation)
+                        }
                     }
 
                     Button {
-                        text: qsTr("Status")
+                        text: qsTr("My Account")
                         anchors {
                             left: parent.left
                             right: parent.right
@@ -313,6 +317,66 @@ Rectangle {
                 
             }
         }
+
+        Component {
+            id: donation
+
+            Rectangle {
+                color: "#184e7d"
+
+                Text {
+                    id: amountTxt
+                    text: qsTr("Amount:")
+                    color: "lightsteelblue"
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        leftMargin: 10
+                        topMargin: 10
+                    }
+                }
+                
+                TextField {
+                    id: amountField
+                    anchors {
+                        left: amountTxt.right
+                        leftMargin: 10
+                    }
+                    placeholderText: qsTr("Enter amount")
+                }
+
+                Button {
+                    text: qsTr("Donate")
+                    onClicked: {
+                        var amtTxt = amountField.text
+                        var amt = parseFloat(amtTxt)
+                        cart.addStuff(qsTr("Donation for material"), 1, amt)
+                        stack.pop()
+                    }
+                    anchors {
+                        left: amountField.right
+                        leftMargin: 10
+                    }
+                }
+
+                InputPanel {
+                    id: inputPanel
+                    y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+
+                Button {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    text: qsTr("Back")
+                    onClicked: {
+                        stack.pop()
+                    }
+                }
+            }
+        }
+
 
     }
 }

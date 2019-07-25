@@ -238,7 +238,7 @@ class Cart(QAbstractListModel):
     def addStuff(self, name, quantity, price):
         ci = None
         for item in self.items:
-            if item.name == name:
+            if item.name == name and item.price == price:
                 ci = item
 
         if ci is None:
