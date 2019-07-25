@@ -167,22 +167,12 @@ class LogEntry:
 
 
 class Logbook(QObject):
-    entries = []
-
     def __init__(self):
         super(Logbook, self).__init__()
-        with open("log.txt", "r") as f:
-            reader = csv.reader(f, delimiter=';')
-            for uids, name, prices, quantitys, dts in reader:
-                uid = int(uids)
-                price = float(prices)
-                quantity = float(quantitys)
-                dt = datetime.fromisoformat(dts)
-                entry = LogEntry(uid, name, price, quantity, dt)
-                self.entries.append(entry)
 
     def writeToDisk(self, entry):
-        with open("log.txt", "a") as f:
+        fname = self.currentName()
+        with open(fname, "a") as f:
             f.write(f"{entry.uid};{entry.name};"
                     f"{entry.price};{entry.quantity};"
                     f"{entry.dt.isoformat()}\n")
@@ -190,14 +180,37 @@ class Logbook(QObject):
     def logEntry(self, uid, name, price, quantity):
         now = datetime.now()
         entry = LogEntry(uid, name, price, quantity, now)
-        self.entries.append(entry)
         self.writeToDisk(entry)
+
+    def currentName(self):
+        now = datetime.now()
+        month = now.month
+        year = now.year
+        fname = "log-{}-{:02}.csv".format(year, month)
+        return fname
+
+    def loadCurrentData(self):
+        entries = []
+        fname = self.currentName()
+        try:
+            with open(fname, "r") as f:
+                reader = csv.reader(f, delimiter=';')
+                for uids, name, prices, quantitys, dts in reader:
+                    uid = int(uids)
+                    price = float(prices)
+                    quantity = float(quantitys)
+                    dt = datetime.fromisoformat(dts)
+                    entry = LogEntry(uid, name, price, quantity, dt)
+                    entries.append(entry)
+        except FileNotFoundError:
+            pass
+        return entries
 
     @Slot(int, result=str)
     def getSum(self, uid):
         uid = int(uid)
         ret = 0
-        for entry in self.entries:
+        for entry in self.loadCurrentData():
             if entry.uid == uid:
                 ret += entry.price * entry.quantity
 
