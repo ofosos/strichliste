@@ -282,8 +282,8 @@ if __name__ == '__main__':
     cart = Cart()
 
     app = QGuiApplication(sys.argv)
-    font = QFont("Helvetica", 16);
-    app.setFont(font);
+    font = QFont("Helvetica", 16)
+    app.setFont(font)
     view = QQuickView()
     view.width = 800
     view.height = 600
