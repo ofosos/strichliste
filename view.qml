@@ -113,7 +113,7 @@ Rectangle {
                 Button {
                     id: btnCheckOut1
                     anchors.bottom: parent.bottom
-                    text: "Check out " + cart.total + " Eur"
+                    text: "Check out " + cart.total + "€"
                     onClicked: {
                         stack.push(rfidpage)
                         cart.startTransaction()
@@ -187,7 +187,7 @@ Rectangle {
                     id: btnCheckOut2
                     anchors.bottom: parent.bottom
                     anchors.left: btnBack.right
-                    text: "Check out " + cart.total + " Eur"
+                    text: "Check out " + cart.total + "€"
                     onClicked: {
                         stack.push(rfidpage)
                         cart.startTransaction()
