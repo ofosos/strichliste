@@ -5,6 +5,7 @@ import csv
 from datetime import datetime
 import json
 import os
+import shutil
 import sys
 
 from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
@@ -114,6 +115,43 @@ class RFIDThread(QRunnable):
             uid = int(input("Enter UID: "))
         finally:
             self._cart.rfidDone(uid)
+
+
+class UidService(QObject):
+    uidmap = {}
+
+    def __init__(self):
+        super(UidService, self).__init__()
+        self.load()
+
+    def load(self):
+        with open("uidmap.json", "r") as f:
+            jtxt = f.read()
+            self.uidmap = json.load(jtxt)
+
+    def checkpoint(self):
+        shutil.rename("uidmap.json", "uidmap.old.json")
+        with open("uidmap.json", "w") as f:
+            jtxt = json.dumps(self.uidmap)
+            f.write(jtxt)
+
+    @Slot(int, result=bool)
+    def isValid(self, uid):
+        return uid in self.uidmap
+
+    @Slot(int, result=bool)
+    def isAdmin(self, uid):
+        return (uid in self.uidmap and
+                uidmap[uid]["admin"] is True)
+
+    @Slot(int, str)
+    def addMapping(self, uid, name):
+        self.uidmap[uid] = {"name": name, "admin": False}
+        self.checkpoint()
+
+    @Slot(int, str)
+    def addAdmin(self, uid):
+        self.uidmap[uid]["admin"] = True
 
 
 class LogEntry:
@@ -249,7 +287,7 @@ class Cart(QAbstractListModel):
         self.beginResetModel()
         worker = RFIDThread(self)
         self.threadpool.start(worker)
-        
+
     @Slot()
     def startTransaction(self):
         self._clearOnRfid = True
@@ -290,7 +328,7 @@ class Cart(QAbstractListModel):
     @Property(int, notify=uidentered)
     def uid(self):
         return self._lastUid
-    
+
     @Property(bool)
     def success(self):
         return self._success
@@ -322,6 +360,8 @@ if __name__ == '__main__':
 
     cart = Cart()
 
+    uidmap = UidService()
+
     app = QGuiApplication(sys.argv)
     font = QFont("Helvetica", 16)
     app.setFont(font)
@@ -335,6 +375,7 @@ if __name__ == '__main__':
     ctx.setContextProperty("drinks", drinks)
     ctx.setContextProperty("cart", cart)
     ctx.setContextProperty("logbook", cart.log)
+    ctx.setContextProperty("uidmap", uidmap)
 
     qml_file = os.path.join(os.path.dirname(__file__), "view.qml")
     view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
