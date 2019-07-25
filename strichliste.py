@@ -240,8 +240,16 @@ class Cart(QAbstractListModel):
 
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
-        ci = CartItem(name, quantity, float(price))
-        self.items.append(ci)
+        ci = None
+        for item in self.items:
+            if item.name == name:
+                ci = item
+
+        if ci is None:
+            ci = CartItem(name, quantity, float(price))
+            self.items.append(ci)
+        else:
+            ci.quantity = 2
         self.totalChanged.emit(self.total)
         print("Cart total: {}".format(self.total))
 
