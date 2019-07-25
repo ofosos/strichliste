@@ -8,7 +8,7 @@ import sys
 
 from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
     QAbstractListModel, Property, Signal, QRunnable, QThreadPool
-from PySide2.QtGui import QGuiApplication
+from PySide2.QtGui import QGuiApplication, QFont
 from PySide2.QtQuick import QQuickView
 from PySide2 import QtCore
 
@@ -278,6 +278,8 @@ if __name__ == '__main__':
     cart = Cart()
 
     app = QGuiApplication(sys.argv)
+    font = QFont("Helvetica", 16);
+    app.setFont(font);
     view = QQuickView()
     view.width = 800
     view.height = 600

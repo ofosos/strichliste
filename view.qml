@@ -36,11 +36,19 @@ Rectangle {
 
                 Column {
                     id: openerCol
+                    width: 200
+                    anchors {
+                        left: parent.left
+                    }
 
                     Button {
                         text: qsTr("Drinks")
                         onClicked: {
                             stack.push(page1)
+                        }
+                        anchors {
+                            left: parent.left
+                            right: parent.right
                         }
                     }
 
@@ -49,14 +57,26 @@ Rectangle {
                         onClicked: {
                             cart.addStuff("Pauschale Mitglied", 1, 3.0)
                         }
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
                     }
 
                     Button {
                         text: qsTr("Materialspende")
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
                     }
 
                     Button {
                         text: qsTr("Status")
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
                     }
 
                 }}
@@ -69,16 +89,16 @@ Rectangle {
                 GridView {
                     anchors.fill: parent
 
-                    cellWidth: 140; cellHeight: 50
+                    cellWidth: 200; cellHeight: 50
                     focus: true
                     model: drinks
 
                     delegate: Item {
-                        width: 140
+                        width: 200
                         height: 50
 
                         Rectangle {
-                            width: 130;
+                            width: 190;
                             height: 40;
                             color: "lightsteelblue"
                             anchors.horizontalCenter: parent.horizontalCenter
