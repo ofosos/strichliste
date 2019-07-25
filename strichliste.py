@@ -218,6 +218,7 @@ class Cart(QAbstractListModel):
         self.items = []
         self.requestEndResetModel.emit()
         self.cleared.emit()
+        self.totalChanged.emit()
 
     @Slot()
     def startTransaction(self):
@@ -233,11 +234,6 @@ class Cart(QAbstractListModel):
             self._success = False
         self.clear()
 
-    @Slot()
-    def cancel(self):
-        self._success = False
-        self.clear()
-
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
         ci = None
@@ -250,17 +246,16 @@ class Cart(QAbstractListModel):
             self.items.append(ci)
         else:
             ci.quantity = 2
-        self.totalChanged.emit(self.total)
+        self.totalChanged.emit()
         print("Cart total: {}".format(self.total))
 
-    totalChanged = Signal(str)
+    totalChanged = Signal()
 
     @Property(bool)
     def success(self):
         return self._success
 
-    @Property(str, notify=totalChanged)
-    def total(self):
+    def getTotal(self):
         tot = 0.0
         for item in self.items:
             su = item._price * item._quantity
@@ -268,6 +263,7 @@ class Cart(QAbstractListModel):
 
         return "{0:.2f}".format(tot)
 
+    total = Property(str, getTotal, notify=totalChanged)
 
 if __name__ == '__main__':
 
