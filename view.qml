@@ -16,7 +16,7 @@ Rectangle {
         anchors.top: parent.top
     }
 
-    property string uid: "0.00"
+    property string uid: "00"
     
     StackView {
         id: stack
@@ -367,6 +367,7 @@ Rectangle {
             
             TextField {
                 id: amountField
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
                 anchors {
                     left: amountTxt.right
                     leftMargin: 10
@@ -378,8 +379,7 @@ Rectangle {
                 text: qsTr("Donate")
                 onClicked: {
                     var amtTxt = amountField.text
-                    var amt = parseFloat(amtTxt)
-                    cart.addStuff(qsTr("Donation for material"), 1, amt)
+                    cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
                     stack.pop()
                 }
                 anchors {
