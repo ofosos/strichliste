@@ -265,6 +265,7 @@ class Cart(QAbstractListModel):
 
     total = Property(str, getTotal, notify=totalChanged)
 
+
 if __name__ == '__main__':
 
     # get our data
