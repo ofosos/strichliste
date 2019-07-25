@@ -127,22 +127,22 @@ class UidService(QObject):
     def load(self):
         with open("uidmap.json", "r") as f:
             jtxt = f.read()
-            self.uidmap = json.load(jtxt)
+            m = json.loads(jtxt)
+            self.uidmap = {int(key): val for key, val in m.items()}
 
     def checkpoint(self):
-        shutil.rename("uidmap.json", "uidmap.old.json")
+        shutil.move("uidmap.json", "uidmap.old.json")
         with open("uidmap.json", "w") as f:
             jtxt = json.dumps(self.uidmap)
             f.write(jtxt)
 
     @Slot(int, result=bool)
     def isValid(self, uid):
-        return uid in self.uidmap
+        return self.uidmap.get(uid, None) is not None
 
     @Slot(int, result=bool)
     def isAdmin(self, uid):
-        return (uid in self.uidmap and
-                uidmap[uid]["admin"] is True)
+        return self.uidmap.get(uid, {}).get("admin", None) is True
 
     @Slot(int, str)
     def addMapping(self, uid, name):
@@ -307,6 +307,9 @@ class Cart(QAbstractListModel):
             if result is not None:
                 self._lastUid = result
                 self.uidentered.emit()
+                self._success = True
+            else:
+                self._success = False
 
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):

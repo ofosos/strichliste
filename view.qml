@@ -88,6 +88,29 @@ Rectangle {
                     }
                 }
 
+                Button {
+                    text: qsTr("Add UID")
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    onClicked: {
+                        stack.push(adduid.createObject(stack))
+                    }
+                }
+
+                Button {
+                    text: qsTr("Add admin")
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    onClicked: {
+                        stack.push(adminuid.createObject(stack))
+                    }
+                }
+
+
             }}
 
     }
@@ -475,6 +498,249 @@ Rectangle {
 
         }
 
+    }
+
+    Component {
+        id: adduid
+
+        Item {
+            Timer {
+                id: timerauthuid
+            }
+
+            function delay(delayTime, cb) {
+                timerauthuid.interval = delayTime;
+                timerauthuid.repeat = false;
+                timerauthuid.triggered.connect(cb);
+                timerauthuid.start();
+            }
+            Component.onCompleted: {
+                cart.uidentered.connect(goUid)
+                cart.fetchUid()
+            }
+
+            function goUid () {
+                if (uidmap.isAdmin(cart.uid)) {
+                    stack.pop()
+                    stack.push(adduid2.createObject(stack))
+                } else {
+                    authFailure.visible = true
+                    delay(3000, function () {
+                        authFailure.visible = false
+                        stack.pop()
+                    })
+                }
+            }
+            Rectangle {
+                width: 400
+                height: 400
+                color: "transparent"
+                Text {
+                    id: insertTag2
+                    text: "Please insert ADMIN tag"
+                    color: "lightsteelblue"
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Image {
+                    width: 300; height: 300
+                    fillMode: Image.PreserveAspectFit
+                    source: "images/rfid.png"
+
+                    anchors {
+                        top: insertTag2.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: authFailure
+                    text: "Failure!"
+                    color: "red"
+                    visible: false
+                    anchors {
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+            }
+            Button {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                text: qsTr("Back")
+                onClicked: {
+                    stack.pop()
+                }
+            }
+        }
+    }
+
+    Component {
+        id: adduid2
+
+        Item {
+            Timer {
+                id: timeradduid
+            }
+
+            function delay(delayTime, cb) {
+                timeradduid.interval = delayTime;
+                timeradduid.repeat = false;
+                timeradduid.triggered.connect(cb);
+                timeradduid.start();
+            }
+            Component.onCompleted: {
+                cart.uidentered.connect(goUid)
+                cart.fetchUid()
+            }
+
+            function goUid () {
+                if (cart.success) {
+                    uidmap.addMapping(cart.uid, enterNameInput.text)
+                    adduidSuccess.visible = true
+                    delay(2000, function () {
+                        stack.pop()
+                    })
+                } else {
+                    adduidFailure.visible = true
+                    delay(2000, function () {
+                        adduidFailure.visible = false
+                        stack.pop()
+                    })
+
+                }
+            }
+            Rectangle {
+                width: 400
+                height: 400
+                color: "transparent"
+                Text {
+                    id: enterName
+                    text: "Please enter name of new tag"
+                    color: "lightsteelblue"
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                TextField {
+                    id: enterNameInput
+                    text: "Name..."
+                    anchors {
+                        top: enterName.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: insertTag3
+                    text: "Please insert new user tag"
+                    color: "lightsteelblue"
+                    anchors {
+                        top: enterNameInput.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+
+                Text {
+                    id: adduidSuccess
+                    text: "Success!"
+                    color: "lightsteelblue"
+                    visible: false
+                    anchors {
+                        top: insertTag3.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Text {
+                    id: adduidFailure
+                    text: "Failure!"
+                    color: "red"
+                    visible: false
+                    anchors {
+                        top: insertTag3.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+            }
+
+            InputPanel {
+                id: inputPanel
+                y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
+                anchors.left: parent.left
+                anchors.right: parent.right
+            }
+
+            Button {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                text: qsTr("Back")
+                onClicked: {
+                    stack.pop()
+                }
+            }
+        }
+    }
+
+    Component {
+        id: adminuid
+
+        Item {
+            Component.onCompleted: {
+                cart.uidentered.connect(goUid)
+                cart.fetchUid()
+            }
+
+            function goUid () {
+                
+                stack.pop()
+            }
+            Rectangle {
+                width: 400
+                height: 400
+                color: "transparent"
+                Text {
+                    id: insertTag4
+                    text: "Please insert ADMIN tag"
+                    color: "lightsteelblue"
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                Image {
+                    width: 300; height: 300
+                    fillMode: Image.PreserveAspectFit
+                    source: "images/rfid.png"
+
+                    anchors {
+                        top: insertTag4.bottom
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+            }
+            Button {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                text: qsTr("Back")
+                onClicked: {
+                    stack.pop()
+                }
+            }
+        }
     }
 
 }
