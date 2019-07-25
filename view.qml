@@ -179,7 +179,6 @@ Rectangle {
                             height: 40;
                             color: "white"
                             anchors {
-                                left: parent.left
                                 leftMargin: 5
                             }
                         }
@@ -265,16 +264,40 @@ Rectangle {
                         delay(5000, function(){ stack.pop({item: opener}) })
                     }
                 }
-                Text {
+                Rectangle {
                     id: tagText
-                    text: "Please insert tag"
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 400
+                    height: 400
+                    color: "transparent"
+                    Text {
+                        id: insertTag
+                        text: "Please insert tag"
+                        color: "lightsteelblue"
+                        anchors {
+                            top: parent.top
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+                    Image {
+                        width: 300; height: 300
+                        fillMode: Image.PreserveAspectFit
+                        source: "images/rfid.png"
+
+                        anchors {
+                            top: insertTag.bottom
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        verticalCenter: parent.verticalCenter
+                    }
                 }
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: tagText.bottom
-
+                    color: "lightsteelblue"
                     id: successText
                     text: "Success!"
                     visible: false
@@ -282,7 +305,7 @@ Rectangle {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: tagText.bottom
-
+                    color: "red"
                     id: failureText
                     text: "Fehler!"
                     visible: false
