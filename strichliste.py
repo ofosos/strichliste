@@ -130,7 +130,9 @@ class Logbook:
 
     def writeToDisk(self, entry):
         with open("log.txt", "a") as f:
-            f.write(f"{entry.uid};{entry.name};{entry.price};{entry.quantity};{entry.dt.isoformat()}\n")
+            f.write(f"{entry.uid};{entry.name};"
+                    "{entry.price};{entry.quantity};"
+                    "{entry.dt.isoformat()}\n")
 
     def logEntry(self, uid, name, price, quantity):
         now = datetime.now()
@@ -170,7 +172,7 @@ class Cart(QAbstractListModel):
         row = index.row()
         if 0 <= row < len(self.items):
             if role == self.QuantityRole:
-                self.items[row].quantity = value
+                self.items[row].quantity = 1  # FIXME
 
     def logCart(self, uid):
         for item in self.items:
@@ -199,7 +201,9 @@ class Cart(QAbstractListModel):
         return roles
 
     def flags(self, index):
-        return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable
+        return (QtCore.Qt.ItemIsEnabled |
+                QtCore.Qt.ItemIsSelectable |
+                QtCore.Qt.ItemIsEditable)
 
     cleared = Signal()
     success = False
@@ -256,11 +260,12 @@ class Cart(QAbstractListModel):
 
         return str(tot)
 
+
 if __name__ == '__main__':
 
     # get our data
 
-    file = open("pricelist.json", "r") 
+    file = open("pricelist.json", "r")
     drinks = file.read()
     data = json.loads(drinks)
 
@@ -278,9 +283,7 @@ if __name__ == '__main__':
     view.height = 600
     view.setResizeMode(QQuickView.SizeRootObjectToView)
 
-    # Expose the list to the Qml code
-    #drinks_model = QStringListModel()
-    #drinks_model.setStringList(data_list)
+    # Expose the data to the Qml code
     view.rootContext().setContextProperty("drinks", drinks)
     view.rootContext().setContextProperty("cart", cart)
 
