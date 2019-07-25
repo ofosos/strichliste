@@ -4,6 +4,7 @@
 import csv
 from datetime import datetime
 import json
+import locale
 import os
 import shutil
 import sys
@@ -23,7 +24,7 @@ class Drink(QObject):
 
     @Property(str)
     def price(self):
-        return self._price
+        return locale.format_string("%.2f", self._price)
 
     @Property(str)
     def name(self):
@@ -88,12 +89,12 @@ class CartItem(QObject):
         self._price = float(val)
 
     def getPrice(self):
-        return "{0:.2f}".format(self._price)
+        return locale.format_string("%.2f", self._price)
 
     price = Property(str, getPrice, setPrice)
 
     def getSum(self):
-        return "{0:.2f}".format(self._price * self._quantity)
+        return locale.format_string("%.2f", self._price)
 
     sum = Property(str, getSum)
 
@@ -215,7 +216,7 @@ class Logbook(QObject):
                 ret += entry.price * entry.quantity
 
         print("getSum: uid={} ret={}".format(uid, ret))
-        return "{0:.2f}".format(ret)
+        return locale.format_string("%.2f", ret)
 
 
 class Cart(QAbstractListModel):
@@ -329,13 +330,14 @@ class Cart(QAbstractListModel):
 
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
+        _price = locale.atof(price)
         ci = None
         for item in self.items:
-            if item.name == name and item.price == price:
+            if item.name == name and item.price == _price:
                 ci = item
 
         if ci is None:
-            ci = CartItem(name, quantity, float(price))
+            ci = CartItem(name, quantity, _price)
             self.items.append(ci)
         else:
             ci.quantity = 2
@@ -358,7 +360,7 @@ class Cart(QAbstractListModel):
             su = item._price * item._quantity
             tot += su
 
-        return "{0:.2f}".format(tot)
+        return locale.format_string("%.2f", tot)
 
     total = Property(str, getTotal, notify=totalChanged)
 
@@ -374,7 +376,8 @@ if __name__ == '__main__':
     drinks = DrinkList()
 
     for item in data:
-        drink = Drink(item['name'], item['price'])
+        drink = Drink(item['name'],
+                      item['price'])
         drinks.items.append(drink)
 
     cart = Cart()

@@ -1,14 +1,14 @@
 [
     {
 	"name": "Club Mate",
-	"price": "1.50"
+	"price": 1.5
     },
     {
 	"name": "Bionade",
-	"price": "1.50"
+	"price": 1.5
     },
     {
 	"name": "Wasser",
-	"price": "1.50"
+	"price": 1.5
     }
 ]
