@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- conding: utf-8 -*-
 
+import csv
 from datetime import datetime
 import json
 import os
@@ -117,22 +118,33 @@ class RFIDThread(QRunnable):
 
 class LogEntry:
     def __init__(self, uid, name, price, quantity, dt):
-        self.uid = uid
+        self.uid = int(uid)
         self.name = name
-        self.price = price
-        self.quantity = quantity
+        self.price = float(price)
+        self.quantity = int(quantity)
         self.dt = dt
 
 
-class Logbook:
-
+class Logbook(QObject):
     entries = []
+
+    def __init__(self):
+        super(Logbook, self).__init__()
+        with open("log.txt", "r") as f:
+            reader = csv.reader(f, delimiter=';')
+            for uids, name, prices, quantitys, dts in reader:
+                uid = int(uids)
+                price = float(prices)
+                quantity = float(quantitys)
+                dt = datetime.fromisoformat(dts)
+                entry = LogEntry(uid, name, price, quantity, dt)
+                self.entries.append(entry)
 
     def writeToDisk(self, entry):
         with open("log.txt", "a") as f:
             f.write(f"{entry.uid};{entry.name};"
-                    "{entry.price};{entry.quantity};"
-                    "{entry.dt.isoformat()}\n")
+                    f"{entry.price};{entry.quantity};"
+                    f"{entry.dt.isoformat()}\n")
 
     def logEntry(self, uid, name, price, quantity):
         now = datetime.now()
@@ -140,8 +152,16 @@ class Logbook:
         self.entries.append(entry)
         self.writeToDisk(entry)
 
-    def getSum(uid):
-        return 0.0
+    @Slot(int, result=str)
+    def getSum(self, uid):
+        uid = int(uid)
+        ret = 0
+        for entry in self.entries:
+            if entry.uid == uid:
+                ret += entry.price * entry.quantity
+
+        print("getSum: uid={} ret={}".format(uid, ret))
+        return "{0:.2f}".format(ret)
 
 
 class Cart(QAbstractListModel):
@@ -206,9 +226,12 @@ class Cart(QAbstractListModel):
                 QtCore.Qt.ItemIsEditable)
 
     cleared = Signal()
+    uidentered = Signal()
     success = False
 
     requestEndResetModel = Signal()
+
+    _clearOnRfid = False
 
     @Slot()
     def callEndResetModel(self):
@@ -221,18 +244,31 @@ class Cart(QAbstractListModel):
         self.totalChanged.emit()
 
     @Slot()
+    def fetchUid(self):
+        self._clearOnRfid = False
+        self.beginResetModel()
+        worker = RFIDThread(self)
+        self.threadpool.start(worker)
+        
+    @Slot()
     def startTransaction(self):
+        self._clearOnRfid = True
         self.beginResetModel()
         worker = RFIDThread(self)
         self.threadpool.start(worker)
 
     def rfidDone(self, result):
-        if result is not None:
-            self.logCart(result)
-            self._success = True
+        if self._clearOnRfid:
+            if result is not None:
+                self.logCart(result)
+                self._success = True
+            else:
+                self._success = False
+            self.clear()
         else:
-            self._success = False
-        self.clear()
+            if result is not None:
+                self._lastUid = result
+                self.uidentered.emit()
 
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
@@ -251,6 +287,10 @@ class Cart(QAbstractListModel):
 
     totalChanged = Signal()
 
+    @Property(int, notify=uidentered)
+    def uid(self):
+        return self._lastUid
+    
     @Property(bool)
     def success(self):
         return self._success
@@ -291,8 +331,10 @@ if __name__ == '__main__':
     view.setResizeMode(QQuickView.SizeRootObjectToView)
 
     # Expose the data to the Qml code
-    view.rootContext().setContextProperty("drinks", drinks)
-    view.rootContext().setContextProperty("cart", cart)
+    ctx = view.rootContext()
+    ctx.setContextProperty("drinks", drinks)
+    ctx.setContextProperty("cart", cart)
+    ctx.setContextProperty("logbook", cart.log)
 
     qml_file = os.path.join(os.path.dirname(__file__), "view.qml")
     view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
