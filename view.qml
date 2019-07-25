@@ -69,23 +69,36 @@ Rectangle {
                 GridView {
                     anchors.fill: parent
 
-                    cellWidth: 100; cellHeight: 50
+                    cellWidth: 140; cellHeight: 50
                     focus: true
                     model: drinks
 
-                    highlight: Rectangle { width: 80; height: 40; color: "lightsteelblue" }
-
                     delegate: Item {
-                        width: 100; height: 50
+                        width: 140
+                        height: 50
 
-                        Text {
-                            id: textName
-                            text: name
+                        Rectangle {
+                            width: 130;
+                            height: 40;
+                            color: "lightsteelblue"
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
-
-                        Text {
-                            anchors { left: textName.right }
-                            text: price
+                        Item {
+                            anchors.fill: parent
+                            
+                            Text {
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                                id: textName
+                                text: name
+                            }
+                            Text {
+                                anchors.left: textName.right
+                                anchors.leftMargin: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: price + "€"
+                            }
                         }
                         MouseArea {
                             anchors.fill: parent
