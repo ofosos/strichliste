@@ -6,4 +6,6 @@ integrated.
 
 # Copyright
 
+See LICENSE.txt for copying information.
+
 Copyright 2019, Mark Meyer (mark@ofosos.org)
