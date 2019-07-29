@@ -2,324 +2,501 @@ import QtQuick 2.0
 import QtQuick.Controls 2.4
 import QtQuick.VirtualKeyboard 2.1
 
+
 Rectangle {
-    id: window
-    width: 800
-    height: 600
-    color: "#184e7d"
+  id: window
+  width: 800
+  height: 600
+  color: "#184e7d"
+
+  // Logo
+  Image {
+    width: 100; height: 100
+    fillMode: Image.PreserveAspectFit
+    source: "images/logo.png"
+    anchors.left: parent.left
+    anchors.top: parent.top
+  }
+
+  property string uid: "00"
+    
+  // cart button
+  Button {
+    id: cartButton
+    background:  Rectangle {color: "#2F6CA1"}
+    anchors.right: parent.right
+    anchors.rightMargin: 10
+    anchors.top: parent.top
+    anchors.topMargin: 10
+    width: 70
+    height: 70
+
+    onClicked: {
+      stack.push(page2.createObject(stack))
+    }
+
+    Text {
+      color: "#ffffff"
+      text: qsTr("Cart")
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.bottom: parent.bottom
+    }
 
     Image {
-        width: 100; height: 100
+      width: 50; height: 50
+      fillMode: Image.PreserveAspectFit
+      source: "images/cart.png"
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+    }
+  }
+
+  Text {
+    id: price
+    text: "3,90 €"
+    color: "#FFF"
+
+    anchors {
+      top: parent.top
+      topMargin: 35
+      right: cartButton.left
+      rightMargin: 10
+    }
+  }
+
+  Button {
+    id: uidButton
+    background: Rectangle {color: "#2F6CA1"}
+    width: 100
+    height: 70
+
+    Text {
+      text: qsTr("Add UID")
+      color: "#FFF"
+      anchors.centerIn: parent
+    }
+
+    anchors {
+      right: price.left
+      rightMargin: 10
+      top: parent.top
+      topMargin: 10
+    }
+
+    onClicked: {
+      stack.push(adduid.createObject(stack))
+    }
+  }
+
+  Button {
+    background: Rectangle {color: "#2F6CA1"}
+    width: 130
+    height: 70
+
+    Text {
+      text: qsTr("Add admin")
+      color: "#FFF"
+      anchors.centerIn: parent
+    }
+
+    anchors {
+      right: uidButton.left
+      rightMargin: 10
+      top: parent.top
+      topMargin: 10
+    }
+
+    onClicked: {
+      stack.push(adminuid.createObject(stack))
+    }
+  }
+
+  /** ===============================
+            frame components
+      ============================== */
+  // for switching frames
+  StackView {
+    id: stack
+    initialItem: opener
+    anchors {
+      top: parent.top
+      topMargin: 100
+      left: parent.left
+      right: parent.right
+      bottom: parent.bottom
+    }
+  }
+
+  // opener menu
+  Component {
+    id: opener
+
+    Item {
+      anchors.fill: parent
+
+    Button {
+      background: Rectangle {color: "#2F6CA1"}
+
+      anchors {
+        top: parent.top
+        left: parent.horizontalCenter
+        bottom: parent.verticalCenter
+        right: parent.right
+        topMargin: 10
+        bottomMargin: 10
+        leftMargin: 10
+        rightMargin: 10
+      }
+
+      onClicked: {
+        stack.push(page1.createObject(stack))
+      }
+
+      Image {
+        width: 80
+        height: 80
         fillMode: Image.PreserveAspectFit
-        source: "images/logo.png"
-        anchors.right: parent.right
-        anchors.top: parent.top
+        source: "images/drinks.png"
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.verticalCenter
+        anchors.bottomMargin: 10
+      }
+
+      Text {
+        text: qsTr("Drinks")
+        color: "#FFFFFF"
+        anchors.top: parent.verticalCenter
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
     }
 
-    property string uid: "00"
-    
-    StackView {
-        id: stack
-        initialItem: opener
+    Button {
+      background: Rectangle {color: "#2F6CA1"}
+
+      anchors {
+        top: parent.top
+        left: parent.left
+        bottom: parent.verticalCenter
+        right: parent.horizontalCenter
+        topMargin: 10
+        bottomMargin: 10
+        leftMargin: 10
+        rightMargin: 10
+      }
+
+      onClicked: {
+        cart.addStuff("Pauschale Mitglied", 1, 3.0)
+      }
+
+      Image {
+        width: 80
+        height: 80
+        fillMode: Image.PreserveAspectFit
+        source: "images/fee.png"
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.verticalCenter
+        anchors.bottomMargin: 10
+      }
+
+      Text {
+        text: qsTr("Workshop fee")
+        color: "#FFFFFF"
+        anchors.top: parent.verticalCenter
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+    }
+
+    Button {
+      background: Rectangle {color: "#2F6CA1"}
+
+      anchors {
+        top: parent.verticalCenter
+        left: parent.left
+        bottom: parent.bottom
+        right: parent.horizontalCenter
+        topMargin: 10
+        bottomMargin: 10
+        leftMargin: 10
+        rightMargin: 10
+      }
+
+      onClicked: {
+        stack.push(donation.createObject(stack))
+      }
+
+      Image {
+        width: 80
+        height: 80
+        fillMode: Image.PreserveAspectFit
+        source: "images/donate.png"
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.verticalCenter
+        anchors.bottomMargin: 10
+      }
+
+      Text {
+        text: qsTr("Donate for material")
+        color: "#FFFFFF"
+        anchors.top: parent.verticalCenter
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+    }
+
+    Button {
+      background: Rectangle {color: "#2F6CA1"}
+
+      anchors {
+        top: parent.verticalCenter
+        left: parent.horizontalCenter
+        bottom: parent.bottom
+        right: parent.right
+        topMargin: 10
+        bottomMargin: 10
+        leftMargin: 10
+        rightMargin: 10
+      }
+
+      onClicked: {
+        stack.push(account.createObject(stack))
+      }
+
+      Image {
+        width: 80
+        height: 80
+        fillMode: Image.PreserveAspectFit
+        source: "images/account.png"
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.verticalCenter
+        anchors.bottomMargin: 10
+      }
+
+      Text {
+        text: qsTr("My Account")
+        color: "#FFFFFF"
+        anchors.top: parent.verticalCenter
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+    }
+    }
+  }
+
+  Component {
+    id: page1
+
+    Item{
+      GridView {
         anchors.fill: parent
-    }
+        cellWidth: 200; cellHeight: 50
+        focus: true
+        model: drinks
 
-    Component {
-        id: opener
-        Item {
+        delegate: Item {
+          width: 200
+          height: 50
 
-            Button {
-                text: qsTr("Cart")
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                onClicked: {
-                    stack.push(page2.createObject(stack))
-                }
-            }
-
-            Column {
-                id: openerCol
-                width: 200
-                anchors {
-                    left: parent.left
-                }
-
-                Button {
-                    text: qsTr("Drinks")
-                    onClicked: {
-                        stack.push(page1.createObject(stack))
-                    }
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                }
-
-                Button {
-                    text: qsTr("Workshop fee")
-                    onClicked: {
-                        cart.addStuff("Pauschale Mitglied", 1, 3.0)
-                    }
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                }
-
-                Button {
-                    text: qsTr("Donate for material")
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    onClicked: {
-                        stack.push(donation.createObject(stack))
-                    }
-                }
-
-                Button {
-                    text: qsTr("My Account")
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    onClicked: {
-                        stack.push(account.createObject(stack))
-                    }
-                }
-
-                Button {
-                    text: qsTr("Add UID")
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    onClicked: {
-                        stack.push(adduid.createObject(stack))
-                    }
-                }
-
-                Button {
-                    text: qsTr("Add admin")
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    onClicked: {
-                        stack.push(adminuid.createObject(stack))
-                    }
-                }
-
-
-            }}
-
-    }
-    Component {
-
-        id: page1
-        Item{
-            GridView {
-                anchors.fill: parent
-
-                cellWidth: 200; cellHeight: 50
-                focus: true
-                model: drinks
-
-                delegate: Item {
-                    width: 200
-                    height: 50
-
-                    Rectangle {
-                        width: 190;
-                        height: 40;
-                        color: "lightsteelblue"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                    }
-                    Button {
-                        anchors.fill: parent
+          Rectangle {
+            width: 190;
+            height: 40;
+            color: "lightsteelblue"
+            anchors.horizontalCenter: parent.horizontalCenter
+          }
+          Button {
+            anchors.fill: parent
                         
-                        Text {
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            id: textName
-                            text: name
-                        }
-                        Text {
-                            anchors.left: textName.right
-                            anchors.leftMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: price + "€"
-                        }
-                        onClicked: {
-                            // parent.GridView.view.currentIndex = index
-                            cart.addStuff(name, 1, price)
-                        }
-                        
-                    }
-                }
-            }
-            Button {
-                id: btnCheckOut1
-                anchors.bottom: parent.bottom
-                text: "Check out " + cart.total + "€"
-                onClicked: {
-                    stack.push(rfidpage.createObject(stack))
-                    cart.startTransaction()
-                }
-            }
-            Button {
-                id: btnSwitchToCart
-                anchors.left: btnCheckOut1.right
-                anchors.bottom: parent.bottom
-                text: "Cart"
-                onClicked: {
-                    stack.push(page2.createObject(stack))
-                }
-            }
-            Button {
-                id: btnBackToOpener
-                anchors.left: btnSwitchToCart.right
-                anchors.bottom: parent.bottom
-                text: "Back"
-                onClicked: {
-                    stack.pop()
-                }
-            }
-        }}
-
-    Component {
-        id: page2
-        Item {
-            Rectangle {
-                width: 600
-                color: "lightsteelblue"
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-
-                GridView {
-                    anchors.fill: parent
-
-                    cellWidth: 600; cellHeight: 50
-                    focus: true
-                    model: cart
-
-                    highlight: Rectangle {
-                        width: 600;
-                        height: 40;
-                        color: "white"
-                        anchors {
-                            leftMargin: 5
-                        }
-                    }
-
-                    delegate: Rectangle {
-                        width: 590; height: 50
-                        color: "transparent"
-
-                        Text {
-                            id: textQuant
-                            text: quantity
-                            width: 50
-                            anchors {
-                                left: parent.left
-                                leftMargin: 10
-                                verticalCenter: parent.verticalCenter
-                            }
-                        }
-                        Text {
-                            anchors {
-                                left: textQuant.right
-                                leftMargin: 10
-                                verticalCenter: parent.verticalCenter
-                            }
-                            id: textName
-                            text: name
-                        }
-
-                        Text {
-                            anchors {
-                                right: parent.right
-                                rightMargin: 20
-                                verticalCenter: parent.verticalCenter
-                            }
-                            text: price + "€"
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                parent.GridView.view.currentIndex = index
-                            }
-
-                        }
-                    }
-                }
-            }
-            Button {
-                id: btnBack
-                anchors.bottom: parent.bottom
-                text: "Back"
-                onClicked: { stack.pop() }
-            }
-            Button {
-                id: btnCheckOut2
-                anchors.bottom: parent.bottom
-                anchors.left: btnBack.right
-                text: "Check out " + cart.total + "€"
-                onClicked: {
-                    stack.push(rfidpage.createObject(stack))
-                    cart.startTransaction()
-                }
-            }
-        }}
-
-    Component {
-        id: rfidpage
-        Item {
-            Timer {
-                id: timer
+            Text {
+              anchors.left: parent.left
+              anchors.leftMargin: 10
+              anchors.verticalCenter: parent.verticalCenter
+              id: textName
+              text: name
             }
 
-            function delay(delayTime, cb) {
-                timer.interval = delayTime;
-                timer.repeat = false;
-                timer.triggered.connect(cb);
-                timer.start();
+            Text {
+              anchors.left: textName.right
+              anchors.leftMargin: 10
+              anchors.verticalCenter: parent.verticalCenter
+              text: price + "€"
             }
-            Connections {
-                target: cart
-                onCleared: {
-                    failureText.visible = !cart.success
-                    successText.visible = cart.success
-                    delay(5000, function(){ stack.clear();
-                                            stack.push(opener.createObject(stack))})
-                }
-            }
-            Rectangle {
-                id: tagText
-                width: 400
-                height: 400
-                color: "transparent"
-                Text {
-                    id: insertTag
-                    text: "Please insert tag"
-                    color: "lightsteelblue"
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Image {
-                    width: 300; height: 300
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/rfid.png"
 
-                    anchors {
-                        top: insertTag.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
+            onClicked: {
+              // parent.GridView.view.currentIndex = index
+              cart.addStuff(name, 1, price)
+            }
+          }
+        }
+      }
+
+      Button {
+        id: btnCheckOut1
+        anchors.bottom: parent.bottom
+        text: "Check out " + cart.total + "€"
+        onClicked: {
+          stack.push(rfidpage.createObject(stack))
+          cart.startTransaction()
+        }
+      }
+      Button {
+        id: btnSwitchToCart
+        anchors.left: btnCheckOut1.right
+        anchors.bottom: parent.bottom
+        text: "Cart"
+        onClicked: {
+          stack.push(page2.createObject(stack))
+        }
+      }
+      Button {
+        id: btnBackToOpener
+        anchors.left: btnSwitchToCart.right
+        anchors.bottom: parent.bottom
+        text: "Back"
+        onClicked: {
+          stack.pop()
+        }
+      }
+    }
+  }
+
+  Component {
+    id: page2
+    Item {
+      Rectangle {
+        width: 600
+        color: "lightsteelblue"
+        anchors {
+          top: parent.top
+          bottom: parent.bottom
+        }
+
+        GridView {
+          anchors.fill: parent
+          cellWidth: 600; cellHeight: 50
+          focus: true
+          model: cart
+          highlight: Rectangle {
+            width: 600;
+            height: 40;
+            color: "white"
+            anchors {
+              leftMargin: 5
+            }
+          }
+
+          delegate: Rectangle {
+            width: 590; height: 50
+            color: "transparent"
+
+            Text {
+              id: textQuant
+              text: quantity
+              width: 50
+              anchors {
+                left: parent.left
+                leftMargin: 10
+                verticalCenter: parent.verticalCenter
+              }
+            }
+            Text {
+              anchors {
+                left: textQuant.right
+                leftMargin: 10
+                verticalCenter: parent.verticalCenter
+              }
+              id: textName
+              text: name
+            }
+
+            Text {
+              anchors {
+                right: parent.right
+                rightMargin: 20
+                verticalCenter: parent.verticalCenter
+              }
+              text: price + "€"
+            }
+            MouseArea {
+              anchors.fill: parent
+              onClicked: {
+                parent.GridView.view.currentIndex = index
+              }
+            }
+          }
+        }
+      }
+      Button {
+        id: btnBack
+        anchors.bottom: parent.bottom
+        text: "Back"
+        onClicked: {
+          stack.pop()
+        }
+      }
+      Button {
+        id: btnCheckOut2
+        anchors.bottom: parent.bottom
+        anchors.left: btnBack.right
+        text: "Check out " + cart.total + "€"
+        onClicked: {
+          stack.push(rfidpage.createObject(stack))
+          cart.startTransaction()
+        }
+      }
+    }
+  }
+
+  Component {
+    id: rfidpage
+    Item {
+      Timer {
+        id: timer
+      }
+
+      function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+      }
+      Connections {
+        target: cart
+        onCleared: {
+          failureText.visible = !cart.success
+          successText.visible = cart.success
+          delay(5000, function(){ stack.clear(); stack.push(opener.createObject(stack))})
+        }
+      }
+
+      Rectangle {
+        id: tagText
+        width: 400
+        height: 400
+        color: "transparent"
+        Text {
+          id: insertTag
+          text: "Please insert tag"
+          color: "lightsteelblue"
+          anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+          }
+        }
+
+        Image {
+          width: 300; height: 300
+          fillMode: Image.PreserveAspectFit
+          source: "images/rfid.png"
+
+          anchors {
+            top: insertTag.bottom
+            horizontalCenter: parent.horizontalCenter
+          }
                 }
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -389,10 +566,10 @@ Rectangle {
             }
 
             InputPanel {
-                id: inputPanel
-                y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
-                anchors.left: parent.left
-                anchors.right: parent.right
+              id: inputPanel
+              y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
+              anchors.left: parent.left
+              anchors.right: parent.right
             }
 
             Button {
