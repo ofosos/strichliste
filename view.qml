@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.4
 import QtQuick.VirtualKeyboard 2.1
-
+import "controls" as MyControls
 
 Rectangle {
   id: window
@@ -21,33 +21,21 @@ Rectangle {
   property string uid: "00"
     
   // cart button
-  Button {
+  MyControls.Button {
     id: cartButton
-    background:  Rectangle {color: "#2F6CA1"}
-    anchors.right: parent.right
-    anchors.rightMargin: 10
-    anchors.top: parent.top
-    anchors.topMargin: 10
-    width: 70
-    height: 70
+    title: qsTr("Cart")
+    iconPath: "images/cart.png"
+    buttonWidth: 80
+
+    anchors {
+      right: parent.right
+      rightMargin: 10
+      top: parent.top
+      topMargin: 10
+    }
 
     onClicked: {
       stack.push(page2.createObject(stack))
-    }
-
-    Text {
-      color: "#ffffff"
-      text: qsTr("Cart")
-      anchors.horizontalCenter: parent.horizontalCenter
-      anchors.bottom: parent.bottom
-    }
-
-    Image {
-      width: 50; height: 50
-      fillMode: Image.PreserveAspectFit
-      source: "images/cart.png"
-      anchors.horizontalCenter: parent.horizontalCenter
-      anchors.top: parent.top
     }
   }
 
@@ -64,17 +52,10 @@ Rectangle {
     }
   }
 
-  Button {
+  MyControls.Button {
     id: uidButton
-    background: Rectangle {color: "#2F6CA1"}
-    width: 100
-    height: 70
-
-    Text {
-      text: qsTr("Add UID")
-      color: "#FFF"
-      anchors.centerIn: parent
-    }
+    buttonWidth: 100
+    title: qsTr("Add UID")
 
     anchors {
       right: price.left
@@ -88,16 +69,10 @@ Rectangle {
     }
   }
 
-  Button {
-    background: Rectangle {color: "#2F6CA1"}
-    width: 130
-    height: 70
-
-    Text {
-      text: qsTr("Add admin")
-      color: "#FFF"
-      anchors.centerIn: parent
-    }
+  MyControls.Button {
+    id: addAdminButton
+    buttonWidth: 130
+    title: qsTr("Add admin")
 
     anchors {
       right: uidButton.left
@@ -127,164 +102,83 @@ Rectangle {
     }
   }
 
-  // opener menu
+  /** ===========================
+             opener menu
+      =========================== */
   Component {
     id: opener
 
     Item {
       anchors.fill: parent
 
-    Button {
-      background: Rectangle {color: "#2F6CA1"}
+      MyControls.BigButton {
+        id: drinkButton
+        title: qsTr("Drinks")
+        iconPath: "images/drinks.png"
 
-      anchors {
-        top: parent.top
-        left: parent.horizontalCenter
-        bottom: parent.verticalCenter
-        right: parent.right
-        topMargin: 10
-        bottomMargin: 10
-        leftMargin: 10
-        rightMargin: 10
+        anchors {
+          top: parent.top
+          left: parent.horizontalCenter
+          bottom: parent.verticalCenter
+          right: parent.right
+        }
+
+        onClicked: {
+          stack.push(page1.createObject(stack))
+        }
       }
 
-      onClicked: {
-        stack.push(page1.createObject(stack))
+      MyControls.BigButton {
+        id: feeButton
+        title: qsTr("Workshop fee")
+        iconPath: "images/fee.png"
+
+        anchors {
+          top: parent.top
+          left: parent.left
+          bottom: parent.verticalCenter
+          right: parent.horizontalCenter
+        }
+
+        onClicked: {
+          cart.addStuff("Pauschale Mitglied", 1, 3.0)
+        }
       }
 
-      Image {
-        width: 80
-        height: 80
-        fillMode: Image.PreserveAspectFit
-        source: "images/drinks.png"
+      MyControls.BigButton {
+        id: donateButton
+        title: qsTr("Donate for material")
+        iconPath: "images/donate.png"
+        background: Rectangle {color: donateButton.down ? "#4F8CC1" : "#2F6CA1"}
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.verticalCenter
-        anchors.bottomMargin: 10
+        anchors {
+          top: parent.verticalCenter
+          left: parent.left
+          bottom: parent.bottom
+          right: parent.horizontalCenter
+        }
+
+        onClicked: {
+          stack.push(donation.createObject(stack))
+        }
       }
 
-      Text {
-        text: qsTr("Drinks")
-        color: "#FFFFFF"
-        anchors.top: parent.verticalCenter
-        anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
+      MyControls.BigButton {
+        id: accountButton
+        title: qsTr("My Account")
+        iconPath: "images/account.png"
+
+        anchors {
+          top: parent.verticalCenter
+          left: parent.horizontalCenter
+          bottom: parent.bottom
+          right: parent.right
+        }
+
+        onClicked: {
+          stack.push(account.createObject(stack))
+        }
       }
-    }
-
-    Button {
-      background: Rectangle {color: "#2F6CA1"}
-
-      anchors {
-        top: parent.top
-        left: parent.left
-        bottom: parent.verticalCenter
-        right: parent.horizontalCenter
-        topMargin: 10
-        bottomMargin: 10
-        leftMargin: 10
-        rightMargin: 10
-      }
-
-      onClicked: {
-        cart.addStuff("Pauschale Mitglied", 1, 3.0)
-      }
-
-      Image {
-        width: 80
-        height: 80
-        fillMode: Image.PreserveAspectFit
-        source: "images/fee.png"
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.verticalCenter
-        anchors.bottomMargin: 10
-      }
-
-      Text {
-        text: qsTr("Workshop fee")
-        color: "#FFFFFF"
-        anchors.top: parent.verticalCenter
-        anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-      }
-    }
-
-    Button {
-      background: Rectangle {color: "#2F6CA1"}
-
-      anchors {
-        top: parent.verticalCenter
-        left: parent.left
-        bottom: parent.bottom
-        right: parent.horizontalCenter
-        topMargin: 10
-        bottomMargin: 10
-        leftMargin: 10
-        rightMargin: 10
-      }
-
-      onClicked: {
-        stack.push(donation.createObject(stack))
-      }
-
-      Image {
-        width: 80
-        height: 80
-        fillMode: Image.PreserveAspectFit
-        source: "images/donate.png"
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.verticalCenter
-        anchors.bottomMargin: 10
-      }
-
-      Text {
-        text: qsTr("Donate for material")
-        color: "#FFFFFF"
-        anchors.top: parent.verticalCenter
-        anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-      }
-    }
-
-    Button {
-      background: Rectangle {color: "#2F6CA1"}
-
-      anchors {
-        top: parent.verticalCenter
-        left: parent.horizontalCenter
-        bottom: parent.bottom
-        right: parent.right
-        topMargin: 10
-        bottomMargin: 10
-        leftMargin: 10
-        rightMargin: 10
-      }
-
-      onClicked: {
-        stack.push(account.createObject(stack))
-      }
-
-      Image {
-        width: 80
-        height: 80
-        fillMode: Image.PreserveAspectFit
-        source: "images/account.png"
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.verticalCenter
-        anchors.bottomMargin: 10
-      }
-
-      Text {
-        text: qsTr("My Account")
-        color: "#FFFFFF"
-        anchors.top: parent.verticalCenter
-        anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-      }
-    }
     }
   }
 
