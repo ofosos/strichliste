@@ -9,3 +9,4 @@ integrated.
 See LICENSE.txt for copying information.
 
 Copyright 2019, Mark Meyer (mark@ofosos.org)
+Copyright 2019, Felix Garbe (info@felix-garbe.be)
