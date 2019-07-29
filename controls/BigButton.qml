@@ -20,16 +20,21 @@ Button {
     fillMode: Image.PreserveAspectFit
     source: iconPath
 
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: parent.verticalCenter
-    anchors.bottomMargin: 10
+    anchors {
+      horizontalCenter: parent.horizontalCenter
+      bottom: parent.verticalCenter
+      bottomMargin: 10
+    }
   }
 
   Text {
     text: title
     color: "#FFFFFF"
-    anchors.top: parent.verticalCenter
-    anchors.topMargin: 10
-    anchors.horizontalCenter: parent.horizontalCenter
+
+    anchors {
+      top: parent.verticalCenter
+      topMargin: 10
+      horizontalCenter: parent.horizontalCenter
+    }
   }
 }

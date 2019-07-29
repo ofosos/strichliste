@@ -1,6 +1,6 @@
 [
     {
-	"name": "Club Mate",
+	"name": "Club Mate (0,33L)",
 	"price": 1.5
     },
     {
@@ -8,7 +8,11 @@
 	"price": 1.5
     },
     {
-	"name": "Wasser",
+	"name": "Wasser (1,5L)",
+	"price": 1.5
+    },
+    {
+	"name": "Fritz Cola",
 	"price": 1.5
     }
 ]
