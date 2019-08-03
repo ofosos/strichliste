@@ -6,7 +6,9 @@ from datetime import datetime
 import json
 import locale
 import os
+import re
 import shutil
+import subprocess
 import sys
 
 from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
@@ -113,7 +115,10 @@ class RFIDThread(QRunnable):
     def run(self):
         uid = None
         try:
-            uid = int(input("Enter UID: "))
+            ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
+            mat = re.match(r'^([0-9]+)', ps.stdout)
+            if mat:
+                uid = int(mat.group(0))
         finally:
             self._cart.rfidDone(uid)
 
