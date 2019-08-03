@@ -118,7 +118,7 @@ class RFIDThread(QRunnable):
             ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
             mat = re.match(r'^([0-9]+)', ps.stdout.decode('utf-8'))
             if mat:
-                uid = int(mat.group(0))
+                uid = mat.group(0)
         finally:
             self._cart.rfidDone(uid)
 
@@ -142,22 +142,22 @@ class UidService(QObject):
             jtxt = json.dumps(self.uidmap)
             f.write(jtxt)
 
-    @Slot(int, result=bool)
+    @Slot(str, result=bool)
     def isValid(self, uid):
         return self.uidmap.get(str(uid), None) is not None
 
-    @Slot(int, result=bool)
+    @Slot(str, result=bool)
     def isAdmin(self, uid):
         return (self.uidmap.get(str(uid)) is not None and
                 self.uidmap[str(uid)]["admin"] is True)
 
-    @Slot(int, str)
+    @Slot(str, str)
     def addMapping(self, uid, name):
         if self.uidmap.get(str(uid), None) is None:
             self.uidmap[str(uid)] = {"name": name, "admin": False}
             self.checkpoint()
 
-    @Slot(int)
+    @Slot(str)
     def addAdmin(self, uid):
         self.uidmap[str(uid)]["admin"] = True
         self.checkpoint()
@@ -165,7 +165,7 @@ class UidService(QObject):
 
 class LogEntry:
     def __init__(self, uid, name, price, quantity, dt):
-        self.uid = int(uid)
+        self.uid = uid
         self.name = name
         self.price = float(price)
         self.quantity = int(quantity)
@@ -202,7 +202,7 @@ class Logbook(QObject):
             with open(fname, "r") as f:
                 reader = csv.reader(f, delimiter=';')
                 for uids, name, prices, quantitys, dts in reader:
-                    uid = int(uids)
+                    uid = uids
                     price = float(prices)
                     quantity = float(quantitys)
                     dt = datetime.fromisoformat(dts)
@@ -212,9 +212,8 @@ class Logbook(QObject):
             pass
         return entries
 
-    @Slot(int, result=str)
+    @Slot(str, result=str)
     def getSum(self, uid):
-        uid = int(uid)
         ret = 0
         for entry in self.loadCurrentData():
             if entry.uid == uid:
@@ -353,7 +352,7 @@ class Cart(QAbstractListModel):
         
     totalChanged = Signal()
 
-    @Property(int, notify=uidentered)
+    @Property(str, notify=uidentered)
     def uid(self):
         return self._lastUid
 
