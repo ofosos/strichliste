@@ -544,8 +544,10 @@ Rectangle {
 
             function goUid () {
                 if (uidmap.isAdmin(cart.uid)) {
-                    stack.pop()
-                    stack.push(adduid2.createObject(stack))
+                    delay(2000, function () {
+                      stack.pop()
+                      stack.push(adduid2.createObject(stack))
+                    })
                 } else {
                     authFailure.visible = true
                     delay(3000, function () {
