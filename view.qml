@@ -589,7 +589,7 @@ Rectangle {
                 }
                 TextField {
                     id: enterNameInput
-                    text: qsTr("Name...")
+                    placeholderText: qsTr("Name...")
                     anchors {
                         top: enterName.bottom
                         horizontalCenter: parent.horizontalCenter
