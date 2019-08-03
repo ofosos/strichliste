@@ -38,4 +38,8 @@ if not error:
     elif not quiet:
         print("ERROR reading card:")
         print(error)
+elif not quiet:
+    print("ERROR reading card:")
+    print(error)
+
 rdr.cleanup()
