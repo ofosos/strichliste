@@ -54,7 +54,7 @@ Rectangle {
   // price text
   Text {
     id: price
-    text: cart.total + qsTr(" €")
+    text: qsTr("%1 €").arg(cart.total)
     color: "#FFF"
     font.pointSize: 24
 
@@ -190,7 +190,7 @@ Rectangle {
         id: payButton
         width: 150
         height: 120
-        title: qsTr("Check out") + "\n" + cart.total + " €"
+        title: qsTr("Check out\n%1 €").arg(cart.total)
         iconPath: "images/pay.png"
 
         anchors {
@@ -423,7 +423,7 @@ Rectangle {
 
       Text {
         id: valueTxt
-        text: logbook.getSum(cart.uid) + qsTr(" €")
+        text: qsTr("%1 €").arg(logbook.getSum(cart.uid))
         color: "#FFF"
         font.pointSize: 24
 
