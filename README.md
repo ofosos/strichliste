@@ -18,11 +18,32 @@ Install QtQuick and the module:
 
 ```
 sudo apt install python3-pyqt5.qtquick qml-module-qtquick-controls2 qml-module-qtquick-virtualkeyboard qml-module-qtquick-window2 qml-module-qtquick2 qtdeclarative5-qtquick2-plugin
-sudo apt install qttools5-dev-tools
+sudo apt install qttools5-dev-tools qt5-default
 pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 ```
 
 Export `QT_IM_MODULE=qtvirtualkeyboard` and call `./strichliste.py`.
+
+# Update translations
+
+Create `i18n/base.ts`.
+
+```
+lupdate view.qml -ts i18n/base.ts
+```
+
+Copy base.ts to a language file and translate via linguist.
+
+```
+cp i18n/base.ts i18n/view_de.ts
+linguist i18n/view_de.ts
+```
+
+Create run-time translation files by running `lrelease`.
+
+```
+lrelease i18n/*.ts
+```
 
 # Copyright
 
