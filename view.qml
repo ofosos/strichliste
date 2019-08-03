@@ -54,7 +54,7 @@ Rectangle {
   // price text
   Text {
     id: price
-    text: cart.total + " €"
+    text: cart.total + qsTr(" €")
     color: "#FFF"
     font.pointSize: 24
 
@@ -119,7 +119,7 @@ Rectangle {
         }
 
         onClicked: {
-          cart.addStuff("Pauschale Mitglied", 1, 3.0)
+          cart.addStuff(qsTr("Day fee member"), 1, dayFee)
         }
       }
 
@@ -423,7 +423,7 @@ Rectangle {
 
       Text {
         id: valueTxt
-        text: logbook.getSum(cart.uid) + " €"
+        text: logbook.getSum(cart.uid) + qsTr(" €")
         color: "#FFF"
         font.pointSize: 24
 
@@ -503,7 +503,7 @@ Rectangle {
                 color: "transparent"
                 Text {
                     id: insertTag2
-                    text: "Please insert ADMIN tag"
+                    text: qsTr("Please insert ADMIN tag")
                     color: "lightsteelblue"
                     anchors {
                         top: parent.top
@@ -522,7 +522,7 @@ Rectangle {
                 }
                 Text {
                     id: authFailure
-                    text: "Failure!"
+                    text: qsTr("Failure!")
                     color: "red"
                     visible: false
                     anchors {
@@ -580,7 +580,7 @@ Rectangle {
                 color: "transparent"
                 Text {
                     id: enterName
-                    text: "Please enter name of new tag"
+                    text: qsTr("Please enter name of new tag")
                     color: "lightsteelblue"
                     anchors {
                         top: parent.top
@@ -589,7 +589,7 @@ Rectangle {
                 }
                 TextField {
                     id: enterNameInput
-                    text: "Name..."
+                    text: qsTr("Name...")
                     anchors {
                         top: enterName.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -597,7 +597,7 @@ Rectangle {
                 }
                 Text {
                     id: insertTag3
-                    text: "Please insert new user tag"
+                    text: qsTr("Please insert new user tag")
                     color: "lightsteelblue"
                     anchors {
                         top: enterNameInput.bottom
@@ -607,7 +607,7 @@ Rectangle {
 
                 Text {
                     id: adduidSuccess
-                    text: "Success!"
+                    text: qsTr("Success!")
                     color: "lightsteelblue"
                     visible: false
                     anchors {
@@ -617,7 +617,7 @@ Rectangle {
                 }
                 Text {
                     id: adduidFailure
-                    text: "Failure!"
+                    text: qsTr("Failure!")
                     color: "red"
                     visible: false
                     anchors {
@@ -684,7 +684,7 @@ Rectangle {
                 color: "transparent"
                 Text {
                     id: insertTag4
-                    text: "Please insert existing ADMIN tag"
+                    text: qsTr("Please insert existing ADMIN tag")
                     color: "lightsteelblue"
                     anchors {
                         top: parent.top
@@ -703,7 +703,7 @@ Rectangle {
                 }
                 Text {
                     id: adminuidSuccess
-                    text: "Success!"
+                    text: qsTr("Success!")
                     color: "lightsteelblue"
                     visible: false
                     anchors {
@@ -713,7 +713,7 @@ Rectangle {
                 }
                 Text {
                     id: adminuidFailure
-                    text: "Success!"
+                    text: qsTr("Success!")
                     color: "lightsteelblue"
                     visible: false
                     anchors {
@@ -781,7 +781,7 @@ Rectangle {
                 color: "transparent"
                 Text {
                     id: insertTag5
-                    text: "Please insert new ADMIN tag"
+                    text: qsTr("Please insert new ADMIN tag")
                     color: "lightsteelblue"
                     anchors {
                         top: parent.top
@@ -790,7 +790,7 @@ Rectangle {
                 }
                 Text {
                     id: adminuid2Success
-                    text: "Success!"
+                    text: qsTr("Success!")
                     color: "lightsteelblue"
                     visible: false
                     anchors {
@@ -800,7 +800,7 @@ Rectangle {
                 }
                 Text {
                     id: adminuid2Failure
-                    text: "Success!"
+                    text: qsTr("Success!")
                     color: "lightsteelblue"
                     visible: false
                     anchors {

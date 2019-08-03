@@ -19,6 +19,9 @@ from PySide2.QtQuick import QQuickView
 from PySide2 import QtCore
 
 
+DAY_FEE = 3.0
+
+
 rfid_enabled = False
 
 
@@ -419,6 +422,7 @@ if __name__ == '__main__':
     ctx.setContextProperty("cart", cart)
     ctx.setContextProperty("logbook", cart.log)
     ctx.setContextProperty("uidmap", uidmap)
+    ctx.setContextProperty("dayFee", DAY_FEE)
 
     qml_file = os.path.join(os.path.dirname(__file__), "view.qml")
     view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
