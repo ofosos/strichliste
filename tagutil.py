@@ -8,17 +8,15 @@ util = rdr.util()
 # Set util debug to true - it will print what's going on
 util.debug = True
 
-while True:
-    # Wait for tag
-    print("Waiting for tag...")
-    rdr.wait_for_tag()
+print("Waiting for tag...")
+rdr.wait_for_tag()
 
-    # Request tag
-    (error, data) = rdr.request()
-    if not error:
-        print("Detected UID:")
+# Request tag
+(error, data) = rdr.request()
+if not error:
+    print("Detected UID:")
 
-        (error, uid) = rdr.anticoll()
-       	print(uid)
+    (error, uid) = rdr.anticoll()
+   	print(uid)
 
 rdr.cleanup()
