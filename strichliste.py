@@ -408,6 +408,6 @@ if __name__ == '__main__':
     if view.status() == QQuickView.Error:
         print("QtQuick Error")
         sys.exit(-1)
-    view.show()
+    view.showFullScreen()
 
     app.exec_()
