@@ -17,6 +17,10 @@ if not error:
     print("Detected UID:")
 
     (error, uid) = rdr.anticoll()
-    print(uid)
-
+    if not error:
+        # Print UID
+        print("Card read UID: "+str(uid[0])+","+str(uid[1])+","+str(uid[2])+","+str(uid[3]))
+    else:
+        print("Error reading card:")
+        print(error)
 rdr.cleanup()
