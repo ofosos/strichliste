@@ -18,6 +18,7 @@ Install QtQuick and the module:
 
 ```
 sudo apt install python3-pyqt5.qtquick qml-module-qtquick-controls2 qml-module-qtquick-virtualkeyboard qml-module-qtquick-window2 qml-module-qtquick2 qtdeclarative5-qtquick2-plugin
+sudo apt install qttools5-dev-tools
 pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 ```
 
