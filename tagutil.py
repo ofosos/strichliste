@@ -14,6 +14,7 @@ rdr.wait_for_tag()
 # Request tag
 (error, data) = rdr.request()
 if not error:
+    print("\nDetected: " + format(data, "02x"))
     print("Detected UID:")
 
     (error, uid) = rdr.anticoll()
