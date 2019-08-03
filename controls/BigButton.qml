@@ -14,7 +14,12 @@ Button {
     rightMargin: 10
   }
 
-  Image {
+  Item {
+    width: 80
+    height: 120
+    anchors.centerIn: parent
+
+    Image {
     width: 80
     height: 80
     fillMode: Image.PreserveAspectFit
@@ -22,19 +27,18 @@ Button {
 
     anchors {
       horizontalCenter: parent.horizontalCenter
-      bottom: parent.verticalCenter
-      bottomMargin: 10
+      top: parent.top
     }
-  }
+    }
 
-  Text {
+    Text {
     text: title
     color: "#FFFFFF"
 
     anchors {
-      top: parent.verticalCenter
-      topMargin: 10
+      bottom: parent.bottom
       horizontalCenter: parent.horizontalCenter
+    }
     }
   }
 }
