@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- conding: utf-8 -*-
 
+import argparse
 import csv
 from datetime import datetime
 import json
@@ -16,6 +17,9 @@ from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
 from PySide2.QtGui import QGuiApplication, QFont
 from PySide2.QtQuick import QQuickView
 from PySide2 import QtCore
+
+
+rfid_enabled = False
 
 
 class Drink(QObject):
@@ -115,10 +119,13 @@ class RFIDThread(QRunnable):
     def run(self):
         uid = None
         try:
-            ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
-            mat = re.match(r'^([0-9]+)', ps.stdout.decode('utf-8'))
-            if mat:
-                uid = mat.group(0)
+            if rfid_enabled:
+                ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
+                mat = re.match(r'^([0-9]+)', ps.stdout.decode('utf-8'))
+                if mat:
+                    uid = mat.group(0)
+            else:
+                uid = input()
         finally:
             self._cart.rfidDone(uid)
 
@@ -375,6 +382,14 @@ if __name__ == '__main__':
 
     # get our data
 
+    parser = argparse.ArgumentParser(description='Hackerspace tally list UI.')
+    parser.add_argument('--rfid', action='store_true')
+    parser.add_argument('--fullscreen', action='store_true')
+    args = parser.parse_args()
+
+    rfid_enabled = args.rfid
+    fullscreen = args.fullscreen
+
     file = open("pricelist.json", "r")
     drinks = file.read()
     data = json.loads(drinks)
@@ -412,6 +427,9 @@ if __name__ == '__main__':
     if view.status() == QQuickView.Error:
         print("QtQuick Error")
         sys.exit(-1)
-    view.showFullScreen()
+    if fullscreen:
+        view.showFullScreen()
+    else:
+        view.show()
 
     app.exec_()
