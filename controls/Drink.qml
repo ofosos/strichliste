@@ -24,7 +24,7 @@ Button {
   }
 
   Text {
-    text: price + " €"
+    text: qsTr("%1 €").arg(price)
     color: "#FFF"
 
     anchors {

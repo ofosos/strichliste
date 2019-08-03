@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 
-from PySide2.QtCore import Qt, QUrl, QObject, Slot,\
+from PySide2.QtCore import Qt, QUrl, QObject, Slot, QTranslator, \
     QAbstractListModel, Property, Signal, QRunnable, QThreadPool
 from PySide2.QtGui import QGuiApplication, QFont
 from PySide2.QtQuick import QQuickView
@@ -409,6 +409,15 @@ if __name__ == '__main__':
     uidmap = UidService()
 
     app = QGuiApplication(sys.argv)
+
+
+    for trfile in ['view_de.qm']:
+        translator = QTranslator()
+
+        translator.load(os.path.join("i18n", trfile))
+
+        app.installTranslator(translator)
+
     font = QFont("Helvetica", 16)
     app.setFont(font)
     view = QQuickView()

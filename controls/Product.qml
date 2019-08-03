@@ -34,7 +34,7 @@ Rectangle {
   }
 
   Text {
-    text: price + " €"
+    text: qsTr("%1 €").arg(price)
 
     anchors {
       right: parent.right
