@@ -6,7 +6,7 @@ import "controls" as MyControls
 Rectangle {
   id: window
   width: 800
-  height: 600
+  height: 480
   color: "#184e7d"
 
   // Logo
