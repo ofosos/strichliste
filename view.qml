@@ -438,7 +438,7 @@ Rectangle {
 
       anchors {
         right: parent.right
-        top: backButton.bottom
+        top: parent.top
       }
 
       onClicked: {
