@@ -17,6 +17,6 @@ if not error:
     print("Detected UID:")
 
     (error, uid) = rdr.anticoll()
-   	print(uid)
+    print(uid)
 
 rdr.cleanup()
