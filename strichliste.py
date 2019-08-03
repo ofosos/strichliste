@@ -410,7 +410,7 @@ if __name__ == '__main__':
     app.setFont(font)
     view = QQuickView()
     view.width = 800
-    view.height = 600
+    view.height = 460
     view.setResizeMode(QQuickView.SizeRootObjectToView)
 
     # Expose the data to the Qml code
