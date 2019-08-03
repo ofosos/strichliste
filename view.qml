@@ -382,7 +382,7 @@ Rectangle {
       }
 
       function checkAccount () {
-        if (cart.success) {
+        if (cart.success && uidmap.isValid(cart.uid)) {
           stack.pop()
           stack.push(accountDisplay.createObject(stack))
         } else {
