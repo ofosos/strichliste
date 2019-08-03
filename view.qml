@@ -56,42 +56,11 @@ Rectangle {
     id: price
     text: cart.total + " €"
     color: "#FFF"
+    font.pointSize: 24
 
     anchors {
-      top: parent.top
-      topMargin: 35
-      right: cartButton.left
-      rightMargin: 10
-    }
-  }
-
-  MyControls.Button {
-    id: uidButton
-    buttonWidth: 100
-    title: qsTr("Add UID")
-
-    anchors {
-      right: price.left
-      top: parent.top
-    }
-
-    onClicked: {
-      stack.push(adduid.createObject(stack))
-    }
-  }
-
-  MyControls.Button {
-    id: addAdminButton
-    buttonWidth: 130
-    title: qsTr("Add admin")
-
-    anchors {
-      right: uidButton.left
-      top: parent.top
-    }
-
-    onClicked: {
-      stack.push(adminuid.createObject(stack))
+      verticalCenter: cartButton.verticalCenter
+      horizontalCenter: parent.horizontalCenter
     }
   }
 
@@ -303,38 +272,8 @@ Rectangle {
         }
       }
 
-      Rectangle {
+      MyControls.RFID {
         id: tagText
-        width: 400
-        height: 320
-        color: "transparent"
-
-        Text {
-          id: insertTag
-          text: qsTr("Please insert tag")
-          color: "#FFF"
-
-          anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-          }
-        }
-
-        Image {
-          width: 300; height: 300
-          fillMode: Image.PreserveAspectFit
-          source: "images/rfid.png"
-
-          anchors {
-            top: insertTag.bottom
-            horizontalCenter: parent.horizontalCenter
-          }
-        }
-
-        anchors {
-          horizontalCenter: parent.horizontalCenter
-          verticalCenter: parent.verticalCenter
-        }
       }
 
       Text {
@@ -365,163 +304,164 @@ Rectangle {
     }
   }
 
-    Component {
-        id: donation
+  /** ===========================
+             donation page
+      =========================== */
+  Component {
+    id: donation
 
-        Rectangle {
-            color: "#184e7d"
+    Item {
+      anchors.fill: parent
 
-            Text {
-                id: amountTxt
-                text: qsTr("Amount:")
-                color: "lightsteelblue"
-                anchors {
-                    left: parent.left
-                    top: parent.top
-                    leftMargin: 10
-                    topMargin: 10
-                }
-            }
-            
-            TextField {
-                id: amountField
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                anchors {
-                    left: amountTxt.right
-                    leftMargin: 10
-                }
-                placeholderText: qsTr("Enter amount")
-            }
-
-            Button {
-                text: qsTr("Donate")
-                onClicked: {
-                    var amtTxt = amountField.text
-                    cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
-                    stack.pop()
-                }
-                anchors {
-                    left: amountField.right
-                    leftMargin: 10
-                }
-            }
-
-            InputPanel {
-              id: inputPanel
-              y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
-              anchors.left: parent.left
-              anchors.right: parent.right
-            }
-
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
-                }
-            }
-        }
-    }
-
-    Component {
-        id: account
-
-        Item {
-            Component.onCompleted: {
-                cart.uidentered.connect(checkAccount)
-                cart.fetchUid()
-            }
-
-            function checkAccount () {
-                if (cart.success) {
-                    stack.pop()
-                    stack.push(accountDisplay.createObject(stack))
-                } else {
-                    stack.pop()
-                }
-                cart.uidentered.disconnect(checkAccount)
-            }
-            Rectangle {
-                width: 400
-                height: 400
-                color: "transparent"
-                Text {
-                    id: insertTag2
-                    text: "Please insert tag"
-                    color: "lightsteelblue"
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Image {
-                    width: 300; height: 300
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/rfid.png"
-
-                    anchors {
-                        top: insertTag2.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-            }
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
-                }
-            }
-        }
-    }
-
-    Component {
-        id: accountDisplay
-
-        Rectangle {
-            color: "#184e7d"
-
-            Text {
-                id: amountSpentTxt
-                text: qsTr("Spent this month:")
-                color: "lightsteelblue"
-                anchors {
-                    left: parent.left
-                    top: parent.top
-                    leftMargin: 10
-                    topMargin: 10
-                }
-            }
-
-            Text {
-                id: valueTxt
-                text: logbook.getSum(cart.uid)
-                color: "lightsteelblue"
-                anchors {
-                    left: amountSpentTxt.right
-                    top: parent.top
-                    leftMargin: 10
-                    topMargin: 10
-                }
-            }
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
-                }
-            }
-
+      Column {
+        spacing: 30
+        anchors {
+          left: parent.left
+          right: parent.horizontalCenter
+          top: parent.top
+          bottom: parent.bottom
         }
 
+        Text {
+          id: amountTxt
+
+          text: qsTr("Amount")
+          font.pointSize:24
+          color: "#FFF"
+
+          anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        TextField {
+          id: amountField
+          width: 200
+          font.pointSize: 24
+
+          inputMethodHints: Qt.ImhFormattedNumbersOnly
+          placeholderText: qsTr("Enter amount")
+
+          anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        MyControls.Button {
+          title: qsTr("Donate")
+          iconPath: "images/donate.png"
+          anchors.horizontalCenter: parent.horizontalCenter
+          width: 200
+
+          onClicked: {
+            var amtTxt = amountField.text
+            cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
+            stack.pop()
+          }
+        }
+      }
+
+      InputPanel {
+        id: inputPanel
+        y: parent.y
+
+        anchors {
+          left: parent.horizontalCenter
+          right: parent.right
+        }
+      }
     }
+  }
+
+  /** ===========================
+          my account rfid page
+      =========================== */
+  Component {
+    id: account
+
+    Item {
+      Component.onCompleted: {
+        cart.uidentered.connect(checkAccount)
+        cart.fetchUid()
+      }
+
+      function checkAccount () {
+        if (cart.success) {
+          stack.pop()
+          stack.push(accountDisplay.createObject(stack))
+        } else {
+          stack.pop()
+        }
+
+        cart.uidentered.disconnect(checkAccount)
+      }
+
+      MyControls.RFID {}
+
+    }
+  }
+
+  /** ===========================
+          my account page
+      =========================== */
+  Component {
+    id: accountDisplay
+    Item {
+    Column {
+      spacing: 30
+
+      anchors {
+        left: parent.left
+        right: parent.right
+        verticalCenter: parent.verticalCenter
+      }
+
+      Text {
+        id: amountSpentTxt
+        text: qsTr("Spent this month")
+        color: "#FFF"
+        font.pointSize: 24
+
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+
+      Text {
+        id: valueTxt
+        text: logbook.getSum(cart.uid) + " €"
+        color: "#FFF"
+        font.pointSize: 24
+
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+    }
+
+    MyControls.Button {
+      id: uidButton
+      buttonWidth: 190
+      title: qsTr("Add UID")
+
+      anchors {
+        right: parent.right
+        top: backButton.bottom
+      }
+
+      onClicked: {
+        stack.push(adduid.createObject(stack))
+      }
+    }
+
+    MyControls.Button {
+      id: addAdminButton
+      buttonWidth: 190
+      title: qsTr("Add admin")
+
+      anchors {
+        right: parent.right
+        top: uidButton.bottom
+      }
+
+      onClicked: {
+        stack.push(adminuid.createObject(stack))
+      }
+    }
+    }
+  }
 
     Component {
         id: adduid
@@ -593,14 +533,6 @@ Rectangle {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
-                }
-            }
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
                 }
             }
         }
@@ -707,14 +639,6 @@ Rectangle {
                 anchors.right: parent.right
             }
 
-            Button {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                text: qsTr("Back")
-                onClicked: {
-                    stack.pop()
-                }
-            }
         }
     }
 
