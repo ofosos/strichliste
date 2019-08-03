@@ -116,7 +116,7 @@ class RFIDThread(QRunnable):
         uid = None
         try:
             ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
-            mat = re.match(r'^([0-9]+)', ps.stdout)
+            mat = re.match(r'^([0-9]+)', ps.stdout.decode('utf-8'))
             if mat:
                 uid = int(mat.group(0))
         finally:
