@@ -360,6 +360,13 @@ class Cart(QAbstractListModel):
             ci.quantity = 2
         self.totalChanged.emit()
         print("Cart total: {}".format(self.total))
+
+    @Slot(int)
+    def remove(self, itemIndex):
+        self.beginResetModel()
+        self.items.remove(self.items[itemIndex])
+        self.endResetModel()
+        self.totalChanged.emit()
         
     totalChanged = Signal()
 

@@ -217,6 +217,10 @@ Rectangle {
           topMargin: 10
           right: parent.right
         }
+
+        onClicked: {
+          cart.remove(cartView.currentIndex)
+        }
       }
 
       Rectangle {
@@ -237,9 +241,19 @@ Rectangle {
           spacing: 0
           focus: true
 
+          highlight: Rectangle {
+            color: "lightsteelblue"
+          }
+
           model: cart
 
-          delegate: MyControls.Product {}
+          delegate: MyControls.Product {
+            MouseArea {
+              anchors.fill: parent
+              onClicked: cartView.currentIndex = index
+            }
+
+          }
         }
       }
 
