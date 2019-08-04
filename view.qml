@@ -313,13 +313,11 @@ Rectangle {
     Item {
       anchors.fill: parent
 
-      Column {
+      Row {
+        id: amountCol
         spacing: 30
         anchors {
-          left: parent.left
-          right: parent.horizontalCenter
-          top: parent.top
-          bottom: parent.bottom
+          horizontalCenter: parent.horizontalCenter
         }
 
         Text {
@@ -329,7 +327,7 @@ Rectangle {
           font.pointSize:24
           color: "#FFF"
 
-          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.verticalCenter: parent.verticalCenter
         }
 
         TextField {
@@ -339,14 +337,12 @@ Rectangle {
 
           inputMethodHints: Qt.ImhFormattedNumbersOnly
           placeholderText: qsTr("Enter amount")
-
-          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.verticalCenter: parent.verticalCenter
         }
 
         MyControls.Button {
           title: qsTr("Donate")
           iconPath: "images/donate.png"
-          anchors.horizontalCenter: parent.horizontalCenter
           width: 200
 
           onClicked: {
@@ -354,17 +350,15 @@ Rectangle {
             cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
             stack.pop()
           }
+          anchors.verticalCenter: parent.verticalCenter
         }
       }
 
       InputPanel {
         id: inputPanel
-        y: parent.y
 
-        anchors {
-          left: parent.horizontalCenter
-          right: parent.right
-        }
+        anchors.top: amountCol.bottom
+        width: parent.width
       }
     }
   }
