@@ -4,6 +4,7 @@
 import argparse
 import csv
 from datetime import datetime
+import dateutil.parser
 import json
 import locale
 import os
@@ -215,7 +216,7 @@ class Logbook(QObject):
                     uid = uids
                     price = float(prices)
                     quantity = float(quantitys)
-                    dt = datetime.fromisoformat(dts)
+                    dt = dateutil.parser.parse(dts)
                     entry = LogEntry(uid, name, price, quantity, dt)
                     entries.append(entry)
         except FileNotFoundError:
