@@ -4,6 +4,8 @@ Prototype for a Strichliste. `run.sh` is my janky startup file.
 QtQuick app for logging drinks consumption digitally. RFID not yet
 integrated.
 
+Dependencies: Qt 5.11, Python 3.6
+
 # Run with PyCharm
 
 Steps:
