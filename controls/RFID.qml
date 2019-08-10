@@ -3,7 +3,7 @@ import QtQuick.Controls 2.4
 
 Item {
   width: 400
-  height: 320
+  height: 280
 
   anchors {
     horizontalCenter: parent.horizontalCenter
@@ -22,7 +22,7 @@ Item {
   }
 
   Image {
-    width: 300; height: 300
+    width: 250; height: 250
     fillMode: Image.PreserveAspectFit
     source: "../images/rfid.png"
 
