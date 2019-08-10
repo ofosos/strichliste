@@ -439,6 +439,7 @@ Rectangle {
       }
     }
 
+    /*
     MyControls.Button {
       id: uidButton
       buttonWidth: 190
@@ -468,6 +469,7 @@ Rectangle {
         stack.push(adminuid.createObject(stack))
       }
     }
+    */
     }
   }
 
