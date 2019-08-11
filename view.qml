@@ -87,7 +87,6 @@ Rectangle {
     id: opener
 
     Item {
-      anchors.fill: parent
 
       MyControls.BigButton {
         id: drinkButton
@@ -265,6 +264,7 @@ Rectangle {
       =========================== */
   Component {
     id: rfidpage
+
     Item {
       Timer {
         id: timer
@@ -325,7 +325,6 @@ Rectangle {
     id: donation
 
     Item {
-      anchors.fill: parent
 
       Row {
         id: amountCol
