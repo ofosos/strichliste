@@ -2,40 +2,40 @@ import QtQuick 2.0
 import QtQuick.Controls 2.4
 
 Button {
-  height: 60
+  height: 100
+  width: 185
   background: Rectangle {color: parent.down ? "#4F8CC1" : "#2F6CA1"}
 
-  anchors {
-    right: parent.right
-    rightMargin: 10
-    left: parent.left
-    leftMargin: 10
-  }
+  Item {
+    height: 60
 
-  Text {
-    text: name
-    color: "#FFF"
+    anchors.centerIn: parent
 
-    anchors {
-      left: parent.left
-      leftMargin: 30
-      verticalCenter: parent.verticalCenter
+    Text {
+      id: nameTxt
+      text: name
+      color: "#FFF"
+
+      anchors {
+        top: parent.top
+        horizontalCenter: parent.horizontalCenter
+      }
+    }
+
+    Text {
+      text: qsTr("%1 €").arg(price)
+      color: "#FFF"
+
+      anchors {
+        bottom: parent.bottom
+
+        horizontalCenter: parent.horizontalCenter
+      }
     }
   }
 
-  Text {
-    text: qsTr("%1 €").arg(price)
-    color: "#FFF"
-
-    anchors {
-      right: parent.right
-      rightMargin: 30
-      verticalCenter: parent.verticalCenter
-    }
+  onClicked: {
+    cart.addStuff(name, 1, price)
   }
 
-    onClicked: {
-            cart.addStuff(name, 1, price)
-          }
-
-          }
+}

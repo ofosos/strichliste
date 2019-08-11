@@ -166,9 +166,16 @@ Rectangle {
     id: drinkPage
 
     Item {
-      ListView {
-        spacing: 10
-        anchors.fill: parent
+      GridView {
+        anchors {
+          fill: parent
+          leftMargin: 10
+          rightMargin: 10
+        }
+
+        cellWidth: 195
+        cellHeight: 120
+
         focus: true
         model: drinks
 
