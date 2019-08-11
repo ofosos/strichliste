@@ -335,11 +335,15 @@ Rectangle {
 
     Item {
 
-      Row {
+      Column {
         id: amountCol
         spacing: 30
+
         anchors {
-          horizontalCenter: parent.horizontalCenter
+          left: parent.left
+          right: parent.horizontalCenter
+          top: parent.top
+          bottom: parent.bottom
         }
 
         Text {
@@ -349,17 +353,16 @@ Rectangle {
           font.pointSize:24
           color: "#FFF"
 
-          anchors.verticalCenter: parent.verticalCenter
+          anchors.horizontalCenter: parent.horizontalCenter
         }
 
         TextField {
           id: amountField
           width: 200
-          font.pointSize: 24
-
-          inputMethodHints: Qt.ImhFormattedNumbersOnly
+          font.pointSize: 16
           placeholderText: qsTr("Enter amount")
-          anchors.verticalCenter: parent.verticalCenter
+          
+          anchors.horizontalCenter: parent.horizontalCenter
         }
 
         MyControls.Button {
@@ -367,20 +370,92 @@ Rectangle {
           iconPath: "images/donate.png"
           width: 200
 
+          anchors.horizontalCenter: parent.horizontalCenter
+
           onClicked: {
             var amtTxt = amountField.text
             cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
             stack.pop()
           }
-          anchors.verticalCenter: parent.verticalCenter
         }
       }
 
-      InputPanel {
-        id: inputPanel
+      Grid {
+        columns: 3
+        spacing: 5
 
-        anchors.top: amountCol.bottom
-        width: parent.width
+        anchors {
+          left: parent.horizontalCenter
+          right: parent.right
+          top: parent.top
+          bottom: parent.bottom
+        }
+
+        MyControls.NumBtn {
+          number: "7"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "8"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "9"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "4"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "5"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "6"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "1"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "2"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "3"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "C"
+          field: amountField
+
+          onClicked: {
+            amountField.clear()
+          }
+        }
+
+        MyControls.NumBtn {
+          number: "0"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "."
+          field: amountField
+
+          enabled: !amountField.text.includes(".")
+        }
       }
     }
   }
