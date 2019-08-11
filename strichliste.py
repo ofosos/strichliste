@@ -444,11 +444,13 @@ if __name__ == '__main__':
     qml_file = os.path.join(os.path.dirname(__file__), "view.qml")
     view.setSource(QUrl.fromLocalFile(os.path.abspath(qml_file)))
 
+    # show errors/ warnings
+    if view.errors():
+        print("QtQuick errors:")
+        print(view.errors())
+
     # Show the window
     if view.status() == QQuickView.Error:
-        print("QtQuick error")
-        print("caused by:")
-        print(view.errors())
         sys.exit(-1)
     if fullscreen:
         view.showFullScreen()
