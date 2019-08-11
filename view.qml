@@ -171,6 +171,7 @@ Rectangle {
           fill: parent
           leftMargin: 10
           rightMargin: 10
+          topMargin: 10
         }
 
         cellWidth: 195
@@ -244,11 +245,11 @@ Rectangle {
 
           anchors.fill: parent
           anchors.topMargin: 10
-          spacing: 0
+          spacing: 5
           focus: true
 
           highlight: Rectangle {
-            color: "lightsteelblue"
+            color: "#EEE"
           }
 
           model: cart
