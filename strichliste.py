@@ -247,9 +247,10 @@ class Cart(QAbstractListModel):
 
     _success = False
 
-    def __init__(self):
+    def __init__(self, uidservice):
         super(Cart, self).__init__()
 
+        self._uidservice = uidservice
         self.requestEndResetModel.connect(self.callEndResetModel)
 
     def rowCount(self, parent=None):
@@ -331,14 +332,14 @@ class Cart(QAbstractListModel):
 
     def rfidDone(self, result):
         if self._clearOnRfid:
-            if result is not None:
+            if result is not None and self._uidservice.isValid(result):
                 self.logCart(result)
                 self._success = True
             else:
                 self._success = False
             self.clear()
         else:
-            if result is not None:
+            if result is not None and self._uidservice.isValid(result):
                 self._lastUid = result
                 self.uidentered.emit()
                 self._success = True
@@ -412,9 +413,9 @@ if __name__ == '__main__':
                       item['price'])
         drinks.items.append(drink)
 
-    cart = Cart()
 
     uidmap = UidService()
+    cart = Cart(uidmap)
 
     app = QGuiApplication(sys.argv)
 
