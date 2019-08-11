@@ -2,3 +2,4 @@
 *.qmlc
 /.idea
 *.csv
+uidmap.old.json
