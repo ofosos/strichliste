@@ -232,6 +232,7 @@ Rectangle {
 
       Rectangle {
         color: "#FFF"
+
         anchors {
           top: parent.top
           bottom: parent.bottom
@@ -245,7 +246,7 @@ Rectangle {
 
           anchors.fill: parent
           anchors.topMargin: 10
-          spacing: 5
+          spacing: 0
           focus: true
 
           highlight: Rectangle {
