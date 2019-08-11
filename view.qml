@@ -87,7 +87,6 @@ Rectangle {
     id: opener
 
     Item {
-      anchors.fill: parent
 
       MyControls.BigButton {
         id: drinkButton
@@ -167,9 +166,17 @@ Rectangle {
     id: drinkPage
 
     Item {
-      ListView {
-        spacing: 10
-        anchors.fill: parent
+      GridView {
+        anchors {
+          fill: parent
+          leftMargin: 10
+          rightMargin: 10
+          topMargin: 10
+        }
+
+        cellWidth: 195
+        cellHeight: 120
+
         focus: true
         model: drinks
 
@@ -225,6 +232,7 @@ Rectangle {
 
       Rectangle {
         color: "#FFF"
+
         anchors {
           top: parent.top
           bottom: parent.bottom
@@ -242,7 +250,7 @@ Rectangle {
           focus: true
 
           highlight: Rectangle {
-            color: "lightsteelblue"
+            color: "#EEE"
           }
 
           model: cart
@@ -265,6 +273,7 @@ Rectangle {
       =========================== */
   Component {
     id: rfidpage
+
     Item {
       Timer {
         id: timer
@@ -325,13 +334,16 @@ Rectangle {
     id: donation
 
     Item {
-      anchors.fill: parent
 
-      Row {
+      Column {
         id: amountCol
         spacing: 30
+
         anchors {
-          horizontalCenter: parent.horizontalCenter
+          left: parent.left
+          right: parent.horizontalCenter
+          top: parent.top
+          bottom: parent.bottom
         }
 
         Text {
@@ -341,17 +353,16 @@ Rectangle {
           font.pointSize:24
           color: "#FFF"
 
-          anchors.verticalCenter: parent.verticalCenter
+          anchors.horizontalCenter: parent.horizontalCenter
         }
 
         TextField {
           id: amountField
           width: 200
-          font.pointSize: 24
-
-          inputMethodHints: Qt.ImhFormattedNumbersOnly
+          font.pointSize: 16
           placeholderText: qsTr("Enter amount")
-          anchors.verticalCenter: parent.verticalCenter
+          
+          anchors.horizontalCenter: parent.horizontalCenter
         }
 
         MyControls.Button {
@@ -359,20 +370,92 @@ Rectangle {
           iconPath: "images/donate.png"
           width: 200
 
+          anchors.horizontalCenter: parent.horizontalCenter
+
           onClicked: {
             var amtTxt = amountField.text
             cart.addStuff(qsTr("Donation for material"), 1, amtTxt)
             stack.pop()
           }
-          anchors.verticalCenter: parent.verticalCenter
         }
       }
 
-      InputPanel {
-        id: inputPanel
+      Grid {
+        columns: 3
+        spacing: 5
 
-        anchors.top: amountCol.bottom
-        width: parent.width
+        anchors {
+          left: parent.horizontalCenter
+          right: parent.right
+          top: parent.top
+          bottom: parent.bottom
+        }
+
+        MyControls.NumBtn {
+          number: "7"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "8"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "9"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "4"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "5"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "6"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "1"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "2"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "3"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "C"
+          field: amountField
+
+          onClicked: {
+            amountField.clear()
+          }
+        }
+
+        MyControls.NumBtn {
+          number: "0"
+          field: amountField
+        }
+
+        MyControls.NumBtn {
+          number: "."
+          field: amountField
+
+          enabled: !amountField.text.includes(".")
+        }
       }
     }
   }
@@ -411,245 +494,178 @@ Rectangle {
   Component {
     id: accountDisplay
     Item {
-    Column {
-      spacing: 30
+      Column {
+        spacing: 30
 
-      anchors {
-        left: parent.left
-        right: parent.right
-        verticalCenter: parent.verticalCenter
+        anchors {
+          left: parent.left
+          right: parent.right
+          verticalCenter: parent.verticalCenter
+        }
+
+        Text {
+          id: amountSpentTxt
+          text: qsTr("Spent this month")
+          color: "#FFF"
+          font.pointSize: 24
+
+          anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        Text {
+          id: valueTxt
+          text: qsTr("%1 €").arg(logbook.getSum(cart.uid))
+          color: "#FFF"
+          font.pointSize: 24
+
+          anchors.horizontalCenter: parent.horizontalCenter
+        }
       }
 
-      Text {
-        id: amountSpentTxt
-        text: qsTr("Spent this month")
-        color: "#FFF"
-        font.pointSize: 24
+      MyControls.Button {
+        id: uidButton
+        buttonWidth: 190
+        title: qsTr("Add UID")
+        visible: uidmap.isAdmin(cart.uid)
 
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+          right: parent.right
+          top: parent.top
+        }
+
+        onClicked: {
+          stack.push(adduid.createObject(stack))
+        }
       }
 
-      Text {
-        id: valueTxt
-        text: qsTr("%1 €").arg(logbook.getSum(cart.uid))
-        color: "#FFF"
-        font.pointSize: 24
+      MyControls.Button {
+        id: addAdminButton
+        buttonWidth: 190
+        title: qsTr("Add admin")
+        visible: uidmap.isAdmin(cart.uid)
 
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+          right: parent.right
+          top: uidButton.bottom
+        }
+
+        onClicked: {
+          stack.push(adminuid.createObject(stack))
+        }
       }
-    }
-
-    /*
-    MyControls.Button {
-      id: uidButton
-      buttonWidth: 190
-      title: qsTr("Add UID")
-
-      anchors {
-        right: parent.right
-        top: parent.top
-      }
-
-      onClicked: {
-        stack.push(adduid.createObject(stack))
-      }
-    }
-
-    MyControls.Button {
-      id: addAdminButton
-      buttonWidth: 190
-      title: qsTr("Add admin")
-
-      anchors {
-        right: parent.right
-        top: uidButton.bottom
-      }
-
-      onClicked: {
-        stack.push(adminuid.createObject(stack))
-      }
-    }
-    */
     }
   }
 
-    Component {
-        id: adduid
+  Component {
+    id: adduid
 
-        Item {
-            Timer {
-                id: timerauthuid
-            }
+    Item {
 
-            function delay(delayTime, cb) {
-                timerauthuid.interval = delayTime;
-                timerauthuid.repeat = false;
-                timerauthuid.triggered.connect(cb);
-                timerauthuid.start();
-            }
-            Component.onCompleted: {
-                cart.uidentered.connect(goUid)
-                cart.fetchUid()
-            }
+      Timer {
+        id: timeradduid
+      }
 
-            function goUid () {
-                if (uidmap.isAdmin(cart.uid)) {
-                    delay(2000, function () {
-                      stack.pop()
-                      stack.push(adduid2.createObject(stack))
-                    })
-                } else {
-                    authFailure.visible = true
-                    delay(3000, function () {
-                        authFailure.visible = false
-                        stack.pop()
-                    })
-                }
-                cart.uidentered.disconnect(goUid)
-            }
-            Rectangle {
-                width: 400
-                height: 400
-                color: "transparent"
-                Text {
-                    id: insertTag2
-                    text: qsTr("Please insert ADMIN tag")
-                    color: "lightsteelblue"
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Image {
-                    width: 300; height: 300
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/rfid.png"
+      function delay(delayTime, cb) {
+        timeradduid.interval = delayTime;
+        timeradduid.repeat = false;
+        timeradduid.triggered.connect(cb);
+        timeradduid.start();
+      }
 
-                    anchors {
-                        top: insertTag2.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Text {
-                    id: authFailure
-                    text: qsTr("Failure!")
-                    color: "red"
-                    visible: false
-                    anchors {
-                        bottom: parent.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-            }
+      Component.onCompleted: {
+        cart.uidentered.connect(checkAdmin)
+        cart.fetchUid()
+      }
+
+      function checkAdmin () {
+        if (cart.success) {
+          uidmap.addMapping(cart.uid, enterNameInput.text)
+          adduidSuccess.visible = true
+          delay(2000, function () {
+            stack.pop()
+          })
+        } else {
+          adduidFailure.visible = true
+          delay(2000, function () {
+            adduidFailure.visible = false
+            stack.pop()
+          })
         }
-    }
-
-    Component {
-        id: adduid2
-
-        Item {
-            Timer {
-                id: timeradduid
-            }
-
-            function delay(delayTime, cb) {
-                timeradduid.interval = delayTime;
-                timeradduid.repeat = false;
-                timeradduid.triggered.connect(cb);
-                timeradduid.start();
-            }
-            Component.onCompleted: {
-                cart.uidentered.connect(checkAdmin)
-                cart.fetchUid()
-            }
-
-            function checkAdmin () {
-                if (cart.success) {
-                    uidmap.addMapping(cart.uid, enterNameInput.text)
-                    adduidSuccess.visible = true
-                    delay(2000, function () {
-                        stack.pop()
-                    })
-                } else {
-                    adduidFailure.visible = true
-                    delay(2000, function () {
-                        adduidFailure.visible = false
-                        stack.pop()
-                    })
-
-                }
-                cart.uidentered.disconnect(checkAdmin)
-            }
-            Rectangle {
-                width: 400
-                height: 400
-                color: "transparent"
-                Text {
-                    id: enterName
-                    text: qsTr("Please enter name of new tag")
-                    color: "lightsteelblue"
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                TextField {
-                    id: enterNameInput
-                    placeholderText: qsTr("Name...")
-                    anchors {
-                        top: enterName.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Text {
-                    id: insertTag3
-                    text: qsTr("Please insert new user tag")
-                    color: "lightsteelblue"
-                    anchors {
-                        top: enterNameInput.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-
-                Text {
-                    id: adduidSuccess
-                    text: qsTr("Success!")
-                    color: "lightsteelblue"
-                    visible: false
-                    anchors {
-                        top: insertTag3.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-                Text {
-                    id: adduidFailure
-                    text: qsTr("Failure!")
-                    color: "red"
-                    visible: false
-                    anchors {
-                        top: insertTag3.bottom
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-            }
-
-            InputPanel {
-                id: inputPanel
-                y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
-                anchors.left: parent.left
-                anchors.right: parent.right
-            }
-
+          cart.uidentered.disconnect(checkAdmin)
         }
+
+        Rectangle {
+          width: 400
+          height: 400
+          color: "transparent"
+          Text {
+            id: enterName
+            text: qsTr("Please enter name of new tag")
+            color: "lightsteelblue"
+            anchors {
+              top: parent.top
+              horizontalCenter: parent.horizontalCenter
+            }
+          }
+
+          TextField {
+            id: enterNameInput
+            placeholderText: qsTr("Name...")
+
+            anchors {
+              top: enterName.bottom
+              horizontalCenter: parent.horizontalCenter
+            }
+          }
+
+          Text {
+            id: insertTag3
+            text: qsTr("Please insert new user tag")
+            color: "lightsteelblue"
+
+            anchors {
+              top: enterNameInput.bottom
+              horizontalCenter: parent.horizontalCenter
+            }
+          }
+
+          Text {
+            id: adduidSuccess
+            text: qsTr("Success!")
+            color: "lightsteelblue"
+            visible: false
+
+            anchors {
+              top: insertTag3.bottom
+              horizontalCenter: parent.horizontalCenter
+            }
+          }
+
+          Text {
+            id: adduidFailure
+            text: qsTr("Failure!")
+            color: "red"
+            visible: false
+
+            anchors {
+              top: insertTag3.bottom
+              horizontalCenter: parent.horizontalCenter
+            }
+          }
+
+          anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+          }
+        }
+
+        InputPanel {
+          id: inputPanel
+          y: Qt.inputMethod.visible ? parent.height - inputPanel.height : parent.height
+          anchors.left: parent.left
+          anchors.right: parent.right
+        }
+      }
     }
 
     Component {
