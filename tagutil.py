@@ -25,7 +25,8 @@ class RC522Reader:
             if error:
                 continue
 
-            print("Tag detected")
+            if not quiet:
+                print("Tag detected")
             (error, uid) = self.read_uid()
             if error:
                 continue
@@ -49,7 +50,8 @@ class RC522Reader:
 
         full_uid = uid[1:3]
 
-        print("UID is not yet complete")
+        if not quiet:
+            print("UID is not yet complete")
         (error, cl2) = self.read_cl2()
         if error:
             return error, None
@@ -114,6 +116,5 @@ class RC522Reader:
 
 
 rdr = RC522Reader()
-(error, uid) = rdr.read_uid()
-if not error:
-    print uid
+uid = rdr.force_read_id()
+print(uid)
