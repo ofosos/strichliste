@@ -121,10 +121,10 @@ class RFIDThread(QRunnable):
 
     @Slot()
     def run(self):
-        uid = None
+        uid = "0"
         try:
             if rfid_enabled:
-                ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
+                ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True, timeout=60)
                 mat = re.match(r'^([0-9A-F]+)', ps.stdout.decode('utf-8'))
                 if mat:
                     uid = mat.group(0)
