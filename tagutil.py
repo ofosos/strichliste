@@ -14,32 +14,106 @@ args = parser.parse_args()
 
 quiet = args.quiet
 
-rdr = RFID()
-util = rdr.util()
-# Set util debug to true - it will print what's going on
-util.debug = True
+class RC522Reader:
+    def __init__(self):
+        self.reader = RFID()
 
-if not quiet:
-    print("Waiting for tag...")
-rdr.wait_for_tag()
+    def force_read_id(self):
+        while True:
+            self.reader.wait_for_tag()
+            (error, tag_type) = self.reader.request()
+            if error:
+                continue
 
-# Request tag
-(error, data) = rdr.request()
+            print("Tag detected")
+            (error, uid) = self.read_uid()
+            if error:
+                continue
+
+            card_uid = ''
+            for part in uid:
+                card_uid += ("%X" % part)
+
+            return card_uid
+
+    def read_uid(self):
+        # https://www.nxp.com/docs/en/application-note/AN10927.pdf
+        (error, uid) = self.reader.anticoll()
+        if error:
+            return error, None
+
+        if uid[0] is not 0x88:
+            return False, uid
+        
+        error = self.reader.select_tag(uid)  
+
+        full_uid = uid[1:3]
+
+        print("UID is not yet complete")
+        (error, cl2) = self.read_cl2()
+        if error:
+            return error, None
+
+        if cl2[0] is not 0x88:
+            full_uid.extend(cl2)
+            return False, full_uid
+
+        full_uid.extend(cl2[1:3])
+        (error, cl3) = self.read_cl3()
+        if error:
+            return error, None
+
+        full_uid.extend(cl3)
+        return False, full_uid
+
+    def read_cl2(self):
+        back_data = []
+        serial_number = []
+
+        serial_number_check = 0
+
+        self.reader.dev_write(0x0D, 0x00)
+        serial_number.append(0x95)
+        serial_number.append(0x20)
+
+        (error, back_data, back_bits) = self.reader.card_write(self.reader.mode_transrec, serial_number)
+        if not error:
+            if len(back_data) == 5:
+                for i in range(4):
+                    serial_number_check = serial_number_check ^ back_data[i]
+
+                if serial_number_check != back_data[4]:
+                    error = True
+            else:
+                error = True
+
+        return error, back_data
+
+    def read_cl3(self):
+        back_data = []
+        serial_number = []
+
+        serial_number_check = 0
+
+        self.reader.dev_write(0x0D, 0x00)
+        serial_number.append(0x97)
+        serial_number.append(0x20)
+
+        (error, back_data, back_bits) = self.reader.card_write(self.reader.mode_transrec, serial_number)
+        if not error:
+            if len(back_data) == 5:
+                for i in range(4):
+                    serial_number_check = serial_number_check ^ back_data[i]
+
+                if serial_number_check != back_data[4]:
+                    error = True
+            else:
+                error = True
+
+        return error, back_data
+
+
+rdr = RC522Reader()
+(error, uid) = rdr.read_uid()
 if not error:
-    if not quiet:
-        print("\nDetected: " + format(data, "02x"))
-        print("Detected UID:")
-
-    (error, uid) = rdr.anticoll()
-    if not error:
-        # Print UID
-        uid = (uid[0] << 24) + (uid[1] << 16) + (uid[2] << 8) + uid[3]
-        print(str(uid))
-    elif not quiet:
-        print("ERROR reading card:")
-        print(error)
-elif not quiet:
-    print("ERROR reading card:")
-    print(error)
-
-rdr.cleanup()
+    print uid
