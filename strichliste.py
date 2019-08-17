@@ -12,6 +12,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 from PySide2.QtCore import Qt, QUrl, QObject, Slot, QTranslator, \
     QAbstractListModel, Property, Signal, QRunnable, QThreadPool
@@ -124,7 +125,15 @@ class RFIDThread(QRunnable):
         uid = "0"
         try:
             if rfid_enabled:
-                ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True, timeout=60)
+                time.sleep(2)
+                needInput = True
+                while needInput:
+                    try:
+                        ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True, timeout=20)
+                        needInput = False
+                    except subprocess.TimeoutExpired as e:
+                        pass
+
                 mat = re.match(r'^([0-9A-F]+)', ps.stdout.decode('utf-8'))
                 if mat:
                     uid = mat.group(0)
