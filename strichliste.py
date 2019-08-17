@@ -125,7 +125,7 @@ class RFIDThread(QRunnable):
         try:
             if rfid_enabled:
                 ps = subprocess.run(['./tagutil.py', '--quiet'], capture_output=True)
-                mat = re.match(r'^([0-9]+)', ps.stdout.decode('utf-8'))
+                mat = re.match(r'^([0-9A-F]+)', ps.stdout.decode('utf-8'))
                 if mat:
                     uid = mat.group(0)
             else:
@@ -344,6 +344,7 @@ class Cart(QAbstractListModel):
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
         _price = locale.atof(price)
+        self.beginResetModel()
         ci = None
         for item in self.items:
             if item.name == name and item.price == _price:
@@ -354,6 +355,7 @@ class Cart(QAbstractListModel):
             self.items.append(ci)
         else:
             ci.quantity = 2
+        self.endResetModel()
         self.totalChanged.emit()
         print("Cart total: {}".format(self.total))
 
