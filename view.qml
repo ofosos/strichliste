@@ -18,8 +18,6 @@ Rectangle {
     anchors.top: parent.top
   }
 
-  property string uid: "00"
-
   MyControls.Button {
     id: backButton
     title: qsTr("Back")
@@ -47,7 +45,7 @@ Rectangle {
     }
 
     onClicked: {
-      stack.push(cartPage.createObject(stack))
+      stack.push(stack.cartPage)
     }
   }
 
@@ -70,7 +68,7 @@ Rectangle {
   // for switching frames
   StackView {
     id: stack
-    initialItem: opener
+    initialItem: this.opener
     anchors {
       top: parent.top
       topMargin: 110
@@ -78,6 +76,34 @@ Rectangle {
       right: parent.right
       bottom: parent.bottom
     }
+
+    function uidentered(uid) {
+      console.log("uidentered activating...")
+      try {
+        currentItem.uidentered(uid)
+      } catch (e) {
+
+      }
+      console.log("Fetch uid activating...")
+      cart.fetchUid()
+    }
+
+    Component.onCompleted: {
+      cart.uidentered.connect(uidentered)
+      cart.fetchUid()
+    } 
+
+    property variant opener: opener.createObject()
+    property variant account: account.createObject()
+    property variant accountDisplay: accountDisplay.createObject()
+    property variant drinkPage: drinkPage.createObject()
+    property variant cartPage: cartPage.createObject()
+    property variant rfidpage: rfidpage.createObject()
+    property variant donation: donation.createObject()
+    property variant adduid: adduid.createObject()
+    property variant adduid2: adduid2.createObject()
+    property variant adminuid: adminuid.createObject()
+    property variant adminuid2: adminuid2.createObject()
   }
 
   /** ===========================
@@ -101,8 +127,9 @@ Rectangle {
           right: parent.right
         }
 
+
         onClicked: {
-          stack.push(drinkPage.createObject(stack))
+          stack.push(stack.drinkPage)
         }
       }
 
@@ -137,7 +164,7 @@ Rectangle {
         }
 
         onClicked: {
-          stack.push(donation.createObject(stack))
+          stack.push(stack.donation)
         }
       }
 
@@ -154,7 +181,7 @@ Rectangle {
         }
 
         onClicked: {
-          stack.push(account.createObject(stack))
+          stack.push(stack.account)
         }
       }
     }
@@ -200,8 +227,7 @@ Rectangle {
         }
 
         onClicked: {
-          stack.push(rfidpage.createObject(stack))
-          cart.startTransaction()
+          stack.push(stack.rfidpage)
         }
       }
 
@@ -224,7 +250,7 @@ Rectangle {
       }
 
       Rectangle {
-        color: "#FFF"
+        //color: "#FFF"
         anchors {
           top: parent.top
           bottom: parent.bottom
@@ -277,12 +303,16 @@ Rectangle {
         timer.start();
       }
 
-      Connections {
-        target: cart
-        onCleared: {
-          failureText.visible = !cart.success
-          successText.visible = cart.success
-          delay(5000, function(){ stack.clear(); stack.push(opener.createObject(stack))})
+      function uidentered (uid) {
+        console.log("rfid checkout uidentered")
+        failureText.visible = !cart.success
+        successText.visible = cart.success
+        if (cart.success) {
+          cart.logCart(cart.uid)
+          cart.clearContents()
+          delay(3000, function(){ while (stack.depth > 1) { stack.pop() } })
+        } else {
+          delay(3000, function(){stack.pop()})
         }
       }
 
@@ -384,20 +414,15 @@ Rectangle {
     id: account
 
     Item {
-      Component.onCompleted: {
-        cart.uidentered.connect(checkAccount)
-        cart.fetchUid()
-      }
 
-      function checkAccount () {
+      function uidentered () {
         if (cart.success && uidmap.isValid(cart.uid)) {
           stack.pop()
-          stack.push(accountDisplay.createObject(stack))
+          stack.push(stack.accountDisplay)
         } else {
           stack.pop()
         }
 
-        cart.uidentered.disconnect(checkAccount)
       }
 
       MyControls.RFID {}
@@ -451,7 +476,7 @@ Rectangle {
       }
 
       onClicked: {
-        stack.push(adduid.createObject(stack))
+        stack.push(stack.adduid)
       }
     }
 
@@ -466,7 +491,7 @@ Rectangle {
       }
 
       onClicked: {
-        stack.push(adminuid.createObject(stack))
+        stack.push(stack.adminuid)
       }
     }
     */
@@ -487,16 +512,12 @@ Rectangle {
                 timerauthuid.triggered.connect(cb);
                 timerauthuid.start();
             }
-            Component.onCompleted: {
-                cart.uidentered.connect(goUid)
-                cart.fetchUid()
-            }
 
-            function goUid () {
+            function fetchuid () {
                 if (uidmap.isAdmin(cart.uid)) {
                     delay(2000, function () {
                       stack.pop()
-                      stack.push(adduid2.createObject(stack))
+                      stack.push(stack.adduid2)
                     })
                 } else {
                     authFailure.visible = true
@@ -505,7 +526,6 @@ Rectangle {
                         stack.pop()
                     })
                 }
-                cart.uidentered.disconnect(goUid)
             }
             Rectangle {
                 width: 400
@@ -562,12 +582,8 @@ Rectangle {
                 timeradduid.triggered.connect(cb);
                 timeradduid.start();
             }
-            Component.onCompleted: {
-                cart.uidentered.connect(checkAdmin)
-                cart.fetchUid()
-            }
 
-            function checkAdmin () {
+            function fetchuid () {
                 if (cart.success) {
                     uidmap.addMapping(cart.uid, enterNameInput.text)
                     adduidSuccess.visible = true
@@ -582,7 +598,6 @@ Rectangle {
                     })
 
                 }
-                cart.uidentered.disconnect(checkAdmin)
             }
             Rectangle {
                 width: 400
@@ -666,17 +681,13 @@ Rectangle {
                 timeradminuid.triggered.connect(cb);
                 timeradminuid.start();
             }
-            Component.onCompleted: {
-                cart.uidentered.connect(processAdmin)
-                cart.fetchUid()
-            }
 
-            function processAdmin () {
+            function uidentered () {
                 if (cart.success && uidmap.isAdmin(cart.uid)) {
                     adminuidSuccess.visible = true
                     delay(1500, function () {
                         stack.pop()
-                        stack.push(adminuid2.createObject(stack))
+                        stack.push(stack.adminuid2)
                     })
                 } else {
                     adminuidFailure.visible = true
@@ -686,7 +697,6 @@ Rectangle {
                     })
 
                 }
-                cart.uidentered.disconnect(processAdmin)
             }
             Rectangle {
                 width: 400
@@ -761,14 +771,8 @@ Rectangle {
                 timeradminuid2.triggered.connect(cb);
                 timeradminuid2.start();
             }
-            Component.onCompleted: {
-                cart.uidentered.connect(enterNewAdmin)
-                cart.fetchUid()
 
-                running = true
-            }
-
-            function enterNewAdmin () {
+            function uidentered () {
                 if (cart.success) {
                     uidmap.addAdmin(cart.uid)
                     adminuid2Success.visible = true
@@ -783,7 +787,7 @@ Rectangle {
                     })
 
                 }
-                cart.uidentered.disconnect(enterNewAdmin)
+
             }
             Rectangle {
                 width: 400

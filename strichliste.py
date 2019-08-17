@@ -246,6 +246,7 @@ class Cart(QAbstractListModel):
     SumRole = QtCore.Qt.UserRole + 1003
 
     _success = False
+    _lastUid = 0
 
     def __init__(self, uidservice):
         super(Cart, self).__init__()
@@ -265,6 +266,7 @@ class Cart(QAbstractListModel):
             if role == self.QuantityRole:
                 self.items[row].quantity = 1  # FIXME
 
+    @Slot(str)
     def logCart(self, uid):
         for item in self.items:
             self.log.logEntry(uid, item.name,
@@ -310,6 +312,14 @@ class Cart(QAbstractListModel):
     def callEndResetModel(self):
         self.endResetModel()
 
+    @Slot()
+    def clearContents(self):
+        self.beginResetModel()
+        self.items = []
+        self.endResetModel()
+        self.cleared.emit()
+        self.totalChanged.emit()        
+
     def clear(self):
         self.items = []
         self.requestEndResetModel.emit()
@@ -323,28 +333,13 @@ class Cart(QAbstractListModel):
         worker = RFIDThread(self)
         self.threadpool.start(worker)
 
-    @Slot()
-    def startTransaction(self):
-        self._clearOnRfid = True
-        self.beginResetModel()
-        worker = RFIDThread(self)
-        self.threadpool.start(worker)
-
     def rfidDone(self, result):
-        if self._clearOnRfid:
-            if result is not None and self._uidservice.isValid(result):
-                self.logCart(result)
-                self._success = True
-            else:
-                self._success = False
-            self.clear()
+        if result is not None and self._uidservice.isValid(result):
+            self._lastUid = result
+            self._success = True
         else:
-            if result is not None and self._uidservice.isValid(result):
-                self._lastUid = result
-                self.uidentered.emit()
-                self._success = True
-            else:
-                self._success = False
+            self._success = False
+        self.uidentered.emit()
 
     @Slot(str, int, str)
     def addStuff(self, name, quantity, price):
