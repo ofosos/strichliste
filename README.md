@@ -42,6 +42,8 @@ $ sudo apt install qml-module-qtquick-controls2 qml-module-qtquick-virtualkeyboa
 $ sudo apt install python3-pyside2*
 ```
 
+Call `run.sh`.
+
 # Update translations
 
 Create `i18n/base.ts`.
