@@ -310,9 +310,9 @@ Rectangle {
         if (cart.success) {
           cart.logCart(cart.uid)
           cart.clearContents()
-          delay(3000, function(){ while (stack.depth > 1) { stack.pop() } })
+          delay(3000, function(){ while (stack.depth > 1) { stack.pop() }; failureText.visible = false; successText.visible = false; })
         } else {
-          delay(3000, function(){stack.pop()})
+          delay(3000, function(){stack.pop(); failureText.visible = false; successText.visible = false; })
         }
       }
 
